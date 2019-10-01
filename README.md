@@ -1,4 +1,4 @@
-# q2-R2py
+# q2-comp
 
 Left_join metadata for all functions; throw an error msg if metadata < data
 or warning if metadata>data
