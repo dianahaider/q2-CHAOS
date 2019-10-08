@@ -7,7 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 #def merge_df(filenames, metadata=None, var=None):
-def seq_count_pairwise(output_dir: str)
+def seq_count_pairwise(output_dir: str,)
     smpl = pd.merge(pd.read_csv(filenames[1]), pd.read_csv(filenames[2]), on = 'sample')
     for i in range(len(filenames)-1):
         smpl = pd.merge(smpl, pd.read_csv(filenames[i+2]), on = 'sample')
