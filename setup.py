@@ -15,5 +15,10 @@ setup(
         ['q2_comp=q2_comp.plugin_setup:plugin']
     },
     zip_safe=FALSE,
-    package_data={'q2_comp': ['citations.bib']}
+    package_data={'q2_comp._adiv': [
+                        'index.html'],
+                    'q2_comp':['citations.bib']
+                    #eventually add the other ones too
+                    },
+
 )
