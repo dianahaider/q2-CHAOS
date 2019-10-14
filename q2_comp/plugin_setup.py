@@ -1,6 +1,6 @@
 #add license
 
-from qiime2.plugin import (Plugin, Visualization, MetadataColumn, Categorical)
+from qiime2.plugin import (Str, Citations, Plugin, Visualization, MetadataColumn, Categorical)
 #import versioneer
 
 #import types
@@ -13,7 +13,7 @@ from q2_comp import _adiv
 
 plugin = Plugin (
     name='comp',
-    version='use versioneer maybe',
+    version='q2_comp.__version__',
     website='https://github.com/dianahaider/q2-comp',
     package='q2-comp',
     citations='',
