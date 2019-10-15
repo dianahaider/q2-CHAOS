@@ -1,0 +1,39 @@
+{% set data = load_setup_py_data() %}
+{% set version = data.get('version') or 'placehold' %}
+
+package:
+  name: q2_comp
+  version: {{ version }}
+
+source:
+  path: ../..
+
+build:
+  script: make install
+
+requirements:
+  host:
+    - python {{ python }}
+    - setuptools
+
+  run:
+    - python {{ python }}
+    - setuptools
+    - numpy
+    - pandas
+    - seaborn
+    - biom-format
+    - QIIME2
+    - q2-types {{ release }}.*
+    - q2-feature-table {{ release }}.*
+    - q2-metadata {{ release }}.*
+
+test:
+  imports:
+    - q2_comp
+    - qiime2.plugins.comp
+
+about:
+  home: https://qiime2.org
+  license: BSD-3-Clause
+  license_family: BSD

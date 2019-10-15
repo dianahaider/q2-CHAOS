@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
-import versioneer
 
 setup(
     name='q2_comp',
-    version='use versioneer eventually',
+    version='2019.7.1',
     packages=find_packages(),
     author='Diana Haider',
     author_email='dianhaider@gmail.com',
@@ -14,7 +13,7 @@ setup(
         'qiime2.plugins':
         ['q2_comp=q2_comp.plugin_setup:plugin']
     },
-    zip_safe=FALSE,
+    zip_safe=False,
     package_data={'q2_comp._adiv': [
                         'index.html'],
                     'q2_comp':['citations.bib']

@@ -9,7 +9,6 @@ from q2_types.feature_table import FeatureTable, Frequency
 #import my functions
 import q2_comp
 from q2_comp import _adiv
-import _adiv
 
 
 plugin = Plugin (
