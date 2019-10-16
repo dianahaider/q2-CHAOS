@@ -1,5 +1,6 @@
 setup.py
 q2_comp/__init__.py
+q2_comp/citations.bib
 q2_comp/plugin_setup.py
 q2_comp.egg-info/PKG-INFO
 q2_comp.egg-info/SOURCES.txt
@@ -8,7 +9,8 @@ q2_comp.egg-info/entry_points.txt
 q2_comp.egg-info/not-zip-safe
 q2_comp.egg-info/top_level.txt
 q2_comp/_adiv/__init__.py
-q2_comp/_adiv/_comp_pairwise.py
+q2_comp/_adiv/_visualizer.py
+q2_comp/_adiv/assets/index.html
 q2_comp/_betadiv/__init__.py
 q2_comp/_denoise/__init__.py
 q2_comp/_ml/__init__.py

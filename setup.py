@@ -14,8 +14,9 @@ setup(
         ['q2_comp=q2_comp.plugin_setup:plugin']
     },
     zip_safe=False,
+    #include non .py files such as txt html bib
     package_data={'q2_comp._adiv': [
-                        'index.html'],
+                    'assets/index.html'],
                     'q2_comp':['citations.bib']
                     #eventually add the other ones too
                     },
