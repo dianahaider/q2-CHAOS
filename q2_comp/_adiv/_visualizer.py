@@ -37,9 +37,9 @@ def comp_pairwise(outputdir: str,
             "value.")
 
     # run comp_pairwise
-    t1=table1.to_dataframe()
-    t2=table2.to_dataframe()
-    smpl = pd.merge(t1, t2, on = 'sample')
+    t1=table.transpose(table1.to_dataframe())
+    t2=table.transpose(table2.to_dataframe())
+    smpl = pd.merge(t1, t2, on = 'sample-id')
 
 
 #add a print some text if no parameters are supplied & have errors if smtg goes wrong so u know how to fix it as user
