@@ -25,6 +25,7 @@ plugin = Plugin (
 )
 
 #register the functions
+#first function: pairwise comparison of either a diversity index (shannon) or feature table
 plugin.visualizers.register_function(
     function=q2_comp.comp_pairwise,
     inputs={
@@ -54,4 +55,101 @@ plugin.visualizers.register_function(
         'by metadata.'
     },
     citations=[]
+)
+
+#second function: raincloud plot for a diversity or feature table (both boxplot and density plot)
+plugin.visualizers.register_function(
+    function=q2_comp.comp_raincloud,
+    inputs={
+        'table1': FeatureTable[Frequency],
+        'table2': FeatureTable[Frequency]
+    },
+    parameters={
+        'metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+    },
+    outputs=[
+        ('raincloudplot', Visualization)
+        #('merged_tables', also add csv of the merged tables)
+    ],
+    input_description={
+        'table1': 'Frequency feature table containing the samples to be compared.',
+        'table2': 'Frequency feature table containing the samples to be compared'
+    },
+    parameter_description={
+        'metadata': 'Categorical metadata column to map plot to different colors.'
+    },
+    name={
+        'Frequency count boxplot'
+    },
+    description={
+        'Visually compare the frequency tables obtained by different clustering',
+        'methods with probablity and box plots of samples ranked by frequency and',
+        'colored by metadata.'
+    },
+    citations=[]
+)
+
+#third function; statistical significance of adiv comparison
+plugin.visualizers.register_function(
+    function=q2_comp.comp_stats,
+    inputs={
+        'table1': FeatureTable[Frequency],
+        'table2': FeatureTable[Frequency]
+    },
+    parameters={
+        'metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+    },
+    outputs=[
+        ('markdown', Visualization)
+        #('merged_tables', also add csv of the merged tables)
+    ],
+    input_description={
+        'table1': 'Frequency feature table containing the samples to be compared.',
+        'table2': 'Frequency feature table containing the samples to be compared'
+    },
+    parameter_description={
+        'metadata': 'Categorical metadata column to map plot to different colors.'
+    },
+    name={
+        'Frequency count statistics'
+    },
+    description={
+        'Statistically compare the frequency tables obtained by different clustering',
+        'methods.'
+    },
+    citations=[]
+
+)
+
+
+#function4: alternative to mantel test.... or combination of 2 plots
+plugin.visualizers.register_function(
+    function=q2_comp.comp_beta,
+    inputs={
+        'table1': FeatureTable[Frequency],
+        'table2': FeatureTable[Frequency]
+    },
+    parameters={
+        'metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+    },
+    outputs=[
+        ('markdown', Visualization)
+        #('merged_tables', also add csv of the merged tables)
+    ],
+    input_description={
+        'table1': 'Frequency feature table containing the samples to be compared.',
+        'table2': 'Frequency feature table containing the samples to be compared'
+    },
+    parameter_description={
+        'metadata': 'Categorical metadata column to map plot to different colors.'
+    },
+    name={
+        'Frequency count statistics'
+    },
+    description={
+        'Statistically compare the frequency tables obtained by different clustering',
+        'methods.'
+    },
+    citations=[]
+
 )
