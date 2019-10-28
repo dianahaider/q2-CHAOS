@@ -202,39 +202,40 @@ plugin.visualizers.register_function(
 plugin.visualizers.register_function(
     function=q2_comp.comp_ml,
     inputs={
-        'model-summary1': SampleData[DADA2Stats],
-        'model-summary2': SampleData[DADA2Stats]
+        'model-summary1': ##########,
+        'model-summary2': ##########
     },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     outputs=[
-        ('barplot', Visualization)
+        ('#####', Visualization)
     ],
     input_description={
-        'stats1': 'Denoising statistics from DADA2.',
-        'stats2': 'Denoising statistics from DADA2 with different parameters.'
+        'model-summary1': 'Table with model accuracy, and ####',
+        'model-summary2': 'Table from same method but different clustering'
     },
-    #parameter_description={
-    #    'metadata': 'Categorical metadata column to map plot to different colors.'
-    #},
+    parameter_description={
+        'metadata': 'Categorical metadata column to map plot to different colors.'
+    },
     name={
-        'Distance matrix comparison'
+        'Model accuracy comparison'
     },
     description={
-        'Visually compare two distance matrices to identify the correlation.'
+        'Visually compare one machine learning model from two different'
+        'clustering methods to assess which clustering model predicts the data'
+        'best.'
     },
     citations=[]
 
 )
 
-#function5: denoise bar diagram
-#take as input stats from qiime2 can only do dada2 for now!
+#function7: taxonomic comparison (how well does it assign taxonomy from these repseqs)
+#sklearn classifier or VSEARCH or naivebayes
 plugin.visualizers.register_function(
-    function=q2_comp.comp_denoise,
+    function=q2_comp.comp_taxo,
     inputs={
-        'stats1': SampleData[DADA2Stats],
-        'stats2': SampleData[DADA2Stats]
+        'taxo1': #########,
+        'taxo2': #########
     },
-    #no metadata here! UNLESS think of complex figure able to show per md categorical column
     outputs=[
         ('barplot', Visualization)
     ],
