@@ -240,17 +240,18 @@ plugin.visualizers.register_function(
         ('barplot', Visualization)
     ],
     input_description={
-        'stats1': 'Denoising statistics qza.',
-        'stats2': 'Distance matrix between pairs of samples obtained from a different method.'
+        'taxo1': 'Taxonomic classification from one feature table',
+        'taxo2': 'Taxonomic classification from a different feature table'
     },
     parameter_description={
         'metadata': 'Categorical metadata column to map plot to different colors.'
     },
     name={
-        'Distance matrix comparison'
+        'Taxonomic classification comparison'
     },
     description={
-        'Visually compare two distance matrices to identify the correlation.'
+        'Visually compare the assignment of taxonomy from the same dataset using'
+        'two different clustering methods.'
     },
     citations=[]
 
