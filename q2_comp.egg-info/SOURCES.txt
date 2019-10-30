@@ -12,6 +12,10 @@ q2_comp/_adiv/__init__.py
 q2_comp/_adiv/_visualizer.py
 q2_comp/_adiv/assets/index.html
 q2_comp/_betadiv/__init__.py
+q2_comp/_betadiv/_visualizer.py
 q2_comp/_denoise/__init__.py
+q2_comp/_denoise/_visualizer.py
 q2_comp/_ml/__init__.py
+q2_comp/_ml/visualizer.py
 q2_comp/_taxo/__init__.py
+q2_comp/_taxo/_visualizer.py

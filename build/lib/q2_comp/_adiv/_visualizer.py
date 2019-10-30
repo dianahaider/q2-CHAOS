@@ -2,44 +2,82 @@ import os
 
 import qiime2
 import q2templates
+from q2_types.feature_table import FeatureTable, Frequency
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
+import ptitprince as pt
 import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
 
-#import qiime2 q2 types
-from q2_types.feature_table import FeatureTable, Frequency
-
 #def merge_df(filenames, metadata=None, var=None):
-def comp_pairwise(outputdir: str,
+def adiv_pairwise(output_dir: str,
                 table1: biom.Table,
                 table2: biom.Table,
                 sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
-            number_of_features, number_of_samples = table.shape
+    sample_frequencies1 = _frequencies(
+    table1, axis='sample')
+    sample_frequencies1.sort_values(inplace=True, ascending=False)
+    sample_frequencies1.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail1.csv'))
+    sample_frequencies2 = _frequencies(
+        table2, axis='sample')
+    sample_frequencies2.sort_values(inplace=True, ascending=False)
+    sample_frequencies2.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail2.csv'))
+    smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
+    return sns.pairplot(smpl)
 
-    # stolen from q2_diversity._alpha._visualizer.py to filter metadata by categorical column
-    pre_filtered_cols = set(metadata.columns)
-    metadata = metadata.filter_columns(column_type='categorical')
-    non_categorical_columns = pre_filtered_cols - set(metadata.columns)
-        pre_filtered_cols = set(metadata.columns)
-    metadata = metadata.filter_columns(
-        drop_all_unique=True, drop_zero_variance=True, drop_all_missing=True)
-    filtered_columns = pre_filtered_cols - set(metadata.columns)
 
-    if len(metadata.columns) == 0:
-        raise ValueError(
-            "Metadata does not contain any columns that satisfy this "
-            "visualizer's requirements. There must be at least one metadata "
-            "column that contains categorical data, isn't empty, doesn't "
-            "consist of unique values, and doesn't consist of exactly one "
-            "value.")
 
-    # run comp_pairwise
-    t1=table1.to_dataframe()
-    t2=table2.to_dataframe()
-    smpl = pd.merge(t1, t2, on = 'sample')
+
+def adiv_raincloud(output_dir: str,
+                    table1: biom.Table,
+                    table2: biom.Table,
+                    sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
+    sample_frequencies1 = _frequencies(
+    table1, axis='sample')
+    sample_frequencies1.sort_values(inplace=True, ascending=False)
+    sample_frequencies1.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail1.csv'))
+    sample_frequencies2 = _frequencies(
+        table2, axis='sample')
+    sample_frequencies2.sort_values(inplace=True, ascending=False)
+    sample_frequencies2.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail2.csv'))
+    smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
+    smpl = pd.melt(smpl, id_vars = 'sample-id')
+    return pt.RainCloud(x = 'variable', y = 'value', data = smpl, orient = 'h',
+                        hue = sample_metadata)
+
+
+def adiv_stats(output_dir: str,
+                    table1: biom.Table,
+                    table2: biom.Table,
+                    sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
+    sample_frequencies1 = _frequencies(
+    table1, axis='sample')
+    sample_frequencies1.sort_values(inplace=True, ascending=False)
+    sample_frequencies1.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail1.csv'))
+    sample_frequencies2 = _frequencies(
+        table2, axis='sample')
+    sample_frequencies2.sort_values(inplace=True, ascending=False)
+    sample_frequencies2.to_csv(
+                os.path.join(output_dir, 'sample-frequency-detail2.csv'))
+    smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
+    smpl = pd.melt(smpl, id_vars = 'sample-id')
+    return pt.RainCloud(x = 'variable', y = 'value', data = smpl, orient = 'h',
+                        hue = sample_metadata)
+                        
+
+#taken from q2-feature-table/_visualizer
+def _frequencies(table1, axis):
+    return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
+
+
 
 
 #add a print some text if no parameters are supplied & have errors if smtg goes wrong so u know how to fix it as user
