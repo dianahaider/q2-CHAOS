@@ -93,7 +93,7 @@ plugin.visualizers.register_function(
         'table2': 'Frequency feature table containing the samples to be compared'
     },
     parameter_descriptions={
-        'sample_metadata': 'Categorical metadata column to map plot to different colors.'
+        'sample_metadata': 'Categorical metadata column.'
     },
     name='Frequency count statistics',
     description="Statistically compare the frequency tables obtained by different clustering methods.",
