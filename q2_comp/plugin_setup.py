@@ -36,7 +36,7 @@ plugin = Plugin (
 #first function: pairwise comparison of either a diversity index (shannon) or feature table
 #maybe combine fun1 and fun2 and add an input 'method: str = {pairwise, raincloud}'
 plugin.visualizers.register_function(
-    function=q2_comp.comp_pairwise,
+    function=q2_comp.adiv_comp_pairwise,
     inputs={
         'table1': FeatureTable[Frequency],
         'table2': FeatureTable[Frequency]
@@ -65,7 +65,7 @@ plugin.visualizers.register_function(
     },
     citations=[]
 )
-
+"""
 #second function: raincloud plot for a diversity or feature table (both boxplot and density plot)
 plugin.visualizers.register_function(
     function=q2_comp.comp_raincloud,
@@ -199,11 +199,12 @@ plugin.visualizers.register_function(
 #in qiime2 you can do -classify samples (nested cross validation)
                     # -fit supervised learning
                     # -random forest
+
 plugin.visualizers.register_function(
     function=q2_comp.comp_ml,
     inputs={
-        'model-summary1': ##########,
-        'model-summary2': ##########
+        'model-summary1': something,
+        'model-summary2': something something
     },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     outputs=[
@@ -233,8 +234,8 @@ plugin.visualizers.register_function(
 plugin.visualizers.register_function(
     function=q2_comp.comp_taxo,
     inputs={
-        'taxo1': #########,
-        'taxo2': #########
+        'taxo1': something,
+        'taxo2': something something
     },
     outputs=[
         ('barplot', Visualization)
@@ -256,3 +257,5 @@ plugin.visualizers.register_function(
     citations=[]
 
 )
+
+"""

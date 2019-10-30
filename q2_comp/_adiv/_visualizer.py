@@ -13,7 +13,7 @@ import ptitprince as pt
 import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
 
 #def merge_df(filenames, metadata=None, var=None):
-def comp_pairwise(outputdir: str,
+def adiv_comp_pairwise(outputdir: str,
                 table1: biom.Table,
                 table2: biom.Table,
                 sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
@@ -30,7 +30,8 @@ def comp_pairwise(outputdir: str,
         sample_frequencies2.to_csv(
                     os.path.join(output_dir, 'sample-frequency-detail2.csv'))
             smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
-            sns.pairplot(smpl)
+            return sns.pairplot(smpl)
+            
 #taken from q2-feature-table/_visualizer
     def _frequencies(table1, axis):
         return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
