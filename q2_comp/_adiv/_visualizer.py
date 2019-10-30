@@ -29,6 +29,7 @@ def comp_pairwise(outputdir: str,
     def _frequencies(table, axis):
         return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
 
+this the right file
 
 
 
