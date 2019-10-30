@@ -25,7 +25,6 @@ plugin = Plugin (
     version='q2_comp.__version__',
     website='https://github.com/dianahaider/q2-comp',
     package='q2-comp',
-    citations='',
     description=('This QIIME2 plugin compares two or more feature tables'
     '(generated) by different clustering methods from a single dataset'
     'through statistics and visualizations.'),
@@ -42,28 +41,18 @@ plugin.visualizers.register_function(
         'table2': FeatureTable[Frequency]
     },
     parameters={
-        'metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+        'sample_metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
     },
-    outputs=[
-        ('pairplot', Visualization)
-        #('merged_tables', also add csv of the merged tables)
-    ],
-    input_description={
+    input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',
         'table2': 'Frequency feature table containing the samples to be compared'
     },
-    parameter_description={
-        'metadata': 'Categorical metadata column to map plot to different colors.'
+    parameter_descriptions={
+        'sample_metadata': 'Categorical metadata column to map plot to different colors.'
     },
-    name={
-        'Frequency count pairwise plot'
-    },
-    description={
-        'Visually compare the frequency tables obtained by different clustering',
-        'methods with pairwise plots of samples ranked by frequency and colored',
-        'by metadata.'
-    },
-    citations=[]
+    name= 'Frequency count pairwise plot',
+    description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and coloredby metadata." ,
+
 )
 """
 #second function: raincloud plot for a diversity or feature table (both boxplot and density plot)
