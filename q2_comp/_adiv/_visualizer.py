@@ -17,20 +17,23 @@ def comp_pairwise(outputdir: str,
                 table1: biom.Table,
                 table2: biom.Table,
                 sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
-            number_of_features, number_of_samples = table.shape
+            #number_of_features, number_of_samples = table.shape
 
             sample_frequencies1 = _frequencies(
             table1, axis='sample')
         sample_frequencies1.sort_values(inplace=True, ascending=False)
         sample_frequencies1.to_csv(
-                    os.path.join(output_dir, 'sample-frequency-detail.csv'))
-
+                    os.path.join(output_dir, 'sample-frequency-detail1.csv'))
+            sample_frequencies2 = _frequencies(
+            table2, axis='sample')
+        sample_frequencies2.sort_values(inplace=True, ascending=False)
+        sample_frequencies2.to_csv(
+                    os.path.join(output_dir, 'sample-frequency-detail2.csv'))
+            smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
+            sns.pairplot(smpl)
 #taken from q2-feature-table/_visualizer
-    def _frequencies(table, axis):
+    def _frequencies(table1, axis):
         return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
-
-this the right file
-
 
 
 
