@@ -27,7 +27,10 @@ def adiv_pairwise(output_dir: str,
     sample_frequencies2.sort_values(inplace=True, ascending=False)
     sample_frequencies2.to_csv(
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
-    smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
+    sample_frequencies_df1 = sample_frequencies1.to_frame()
+    sample_frequencies_df2 = sample_frequencies2.to_frame()
+
+    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = 'sample')
     return sns.pairplot(smpl)
 
 
@@ -71,10 +74,10 @@ def adiv_stats(output_dir: str,
     smpl = pd.melt(smpl, id_vars = 'sample-id')
     return pt.RainCloud(x = 'variable', y = 'value', data = smpl, orient = 'h',
                         hue = sample_metadata)
-                        
+
 
 #taken from q2-feature-table/_visualizer
-def _frequencies(table1, axis):
+def _frequencies(table, axis):
     return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
 
 
