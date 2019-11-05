@@ -1,6 +1,6 @@
 #add license
 
-from qiime2.plugin import (Str, Citations, Plugin, Visualization, MetadataColumn, Categorical)
+from qiime2.plugin import (Str, Citations, Plugin, Visualization, MetadataColumn, Categorical, Metadata, Set, Numeric)
 #import versioneer
 
 
@@ -43,14 +43,16 @@ plugin.visualizers.register_function(
         'table2': FeatureTable[Frequency]
     },
     parameters={
-        'sample_metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+        'metadata': Metadata, #can seaborn support numerical metadata?
+        'metadata_col': Str
     },
     input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',
         'table2': 'Frequency feature table containing the samples to be compared'
     },
     parameter_descriptions={
-        'sample_metadata': 'Categorical metadata column to map plot to different colors.'
+        'metadata': 'Sample metadata containing metadata_column which will be used to map color the plot.',
+        'metadata_col': 'Sample metadata column to use to map color the plot.'
     },
     name= 'Frequency count pairwise plot',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,

@@ -23,7 +23,9 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_adiv')
 def adiv_pairwise(output_dir: str,
                 table1: biom.Table,
                 table2: biom.Table,
-                sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
+                metadata_col: str,
+                metadata: qiime2.Metadata) -> None:
+#try to change column to str and metadata as the file
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -38,14 +40,13 @@ def adiv_pairwise(output_dir: str,
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
     sample_frequencies_df1 = sample_frequencies1.to_frame()
     sample_frequencies_df2 = sample_frequencies2.to_frame()
-    #mtdata = sample_metadata.to_frame()
+    metadata = metadata.to_frame()
     sample_frequencies_df1.index.name = "sample-id"
     sample_frequencies_df1.reset_index(inplace=True)
     sample_frequencies_df2.index.name = "sample-id"
     sample_frequencies_df2.reset_index(inplace=True)
     smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    series = sample_metadata.to_series()
 #    smpl_metadata = pd.merge(smpl,series)
 
 
@@ -59,8 +60,8 @@ def adiv_pairwise(output_dir: str,
     index = os.path.join(TEMPLATES, 'assets', 'index.html')
     q2templates.render(index, output_dir)
 
-    table_preview = series.to_html()
-    print(table_preview)
+#    table_preview = series.to_html()
+#    print(table_preview)
 
 
 def adiv_raincloud(output_dir: str,
