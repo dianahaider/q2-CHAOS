@@ -38,22 +38,29 @@ def adiv_pairwise(output_dir: str,
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
     sample_frequencies_df1 = sample_frequencies1.to_frame()
     sample_frequencies_df2 = sample_frequencies2.to_frame()
+    #mtdata = sample_metadata.to_frame()
     sample_frequencies_df1.index.name = "sample-id"
     sample_frequencies_df1.reset_index(inplace=True)
     sample_frequencies_df2.index.name = "sample-id"
     sample_frequencies_df2.reset_index(inplace=True)
     smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+    smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
+    series = sample_metadata.to_series()
+#    smpl_metadata = pd.merge(smpl,series)
+
+
+
     niceplot = sns.pairplot(smpl)
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
+    niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
 
-    #niceplot.get_figure().savefig(os.path.join(output_dir, 'pleasework.png'))
 
     index = os.path.join(TEMPLATES, 'assets', 'index.html')
     q2templates.render(index, output_dir)
 
-    #table_preview = smpl.to_html()
-    #print(table_preview)
+    table_preview = series.to_html()
+    print(table_preview)
 
 
 def adiv_raincloud(output_dir: str,
