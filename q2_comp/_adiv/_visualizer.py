@@ -1,7 +1,11 @@
 import os
+import json
+import pkg_resources
+import shutil
 
 import qiime2
 import q2templates
+
 from q2_types.feature_table import FeatureTable, Frequency
 
 import pandas as pd
@@ -12,6 +16,8 @@ import matplotlib.pyplot as plt
 import ptitprince as pt
 import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
 import skbio
+
+TEMPLATES = pkg_resources.resource_filename('q2_comp', '_adiv')
 
 #def merge_df(filenames, metadata=None, var=None):
 def adiv_pairwise(output_dir: str,
@@ -32,16 +38,22 @@ def adiv_pairwise(output_dir: str,
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
     sample_frequencies_df1 = sample_frequencies1.to_frame()
     sample_frequencies_df2 = sample_frequencies2.to_frame()
-    sample_frequencies_df1 = sample_frequencies_df1.rename(columns = {sample_frequencies_df1.columns[0]:"sample"})
-    sample_frequencies_df2 = sample_frequencies_df2.rename(columns = {sample_frequencies_df2.columns[0]:"sample"})
-    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2)
+    sample_frequencies_df1.index.name = "sample-id"
+    sample_frequencies_df1.reset_index(inplace=True)
+    sample_frequencies_df2.index.name = "sample-id"
+    sample_frequencies_df2.reset_index(inplace=True)
+    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+    niceplot = sns.pairplot(smpl)
+    niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
+    plt.gcf().clear()
 
-    table_preview = smpl.to_html()
-    print(table_preview)
+    #niceplot.get_figure().savefig(os.path.join(output_dir, 'pleasework.png'))
 
-    #return sns.pairplot(smpl)
+    index = os.path.join(TEMPLATES, 'assets', 'index.html')
+    q2templates.render(index, output_dir)
 
-
+    #table_preview = smpl.to_html()
+    #print(table_preview)
 
 
 def adiv_raincloud(output_dir: str,
