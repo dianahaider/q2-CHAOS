@@ -11,27 +11,35 @@ import matplotlib
 import matplotlib.pyplot as plt
 import ptitprince as pt
 import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
+import skbio
 
 #def merge_df(filenames, metadata=None, var=None):
 def adiv_pairwise(output_dir: str,
                 table1: biom.Table,
                 table2: biom.Table,
                 sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
+    number_of_features1, number_of_samples1 = table1.shape
+    number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
-    table1, axis='sample')
+    table1, axis = 'sample')
     sample_frequencies1.sort_values(inplace=True, ascending=False)
     sample_frequencies1.to_csv(
                 os.path.join(output_dir, 'sample-frequency-detail1.csv'))
     sample_frequencies2 = _frequencies(
-        table2, axis='sample')
+        table2, axis = 'sample')
     sample_frequencies2.sort_values(inplace=True, ascending=False)
     sample_frequencies2.to_csv(
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
     sample_frequencies_df1 = sample_frequencies1.to_frame()
     sample_frequencies_df2 = sample_frequencies2.to_frame()
+    sample_frequencies_df1 = sample_frequencies_df1.rename(columns = {sample_frequencies_df1.columns[0]:"sample"})
+    sample_frequencies_df2 = sample_frequencies_df2.rename(columns = {sample_frequencies_df2.columns[0]:"sample"})
+    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2)
 
-    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = 'sample')
-    return sns.pairplot(smpl)
+    table_preview = smpl.to_html()
+    print(table_preview)
+
+    #return sns.pairplot(smpl)
 
 
 

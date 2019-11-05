@@ -1,4 +1,5 @@
 from . import _adiv
+from . import _denoise
 
 from ._adiv import (adiv_pairwise, adiv_raincloud, adiv_stats)
 
