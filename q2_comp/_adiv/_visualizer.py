@@ -51,23 +51,16 @@ def adiv_pairwise(output_dir: str,
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
 
-
     niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'])
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
-
 
     index = os.path.join(TEMPLATES, 'assets', 'index.html')
     q2templates.render(index, output_dir)
 
 #    table_preview = metadata.to_html()
 #    print(table_preview)
-
-
-
-
-
 
 
 
