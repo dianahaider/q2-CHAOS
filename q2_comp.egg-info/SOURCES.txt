@@ -10,7 +10,6 @@ q2_comp.egg-info/not-zip-safe
 q2_comp.egg-info/top_level.txt
 q2_comp/_adiv/__init__.py
 q2_comp/_adiv/_visualizer.py
-q2_comp/_adiv/assets/index.html
 q2_comp/_betadiv/__init__.py
 q2_comp/_betadiv/_visualizer.py
 q2_comp/_denoise/__init__.py
