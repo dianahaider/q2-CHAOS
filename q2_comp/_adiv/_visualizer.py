@@ -92,11 +92,11 @@ def adiv_raincloud(output_dir: str,
     smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     melted_smpl = pd.melt(smpl, id_vars = 'sample-id')
-    melted_smpl_metadata = pd.merge(melted_smpl,metadata, on = "sample-id")
-    smpl = smpl.rename(columns = {'variable':'Method', 'value':'Sequencing Depth'})
+    melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
+    melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Method', 'value':'Sequencing Depth'})
 
 
-    niceplot = pt.RainCloud( x = 'variavb', y = 'Sequencing Depth', data = smpl_metadata, orient = 'h' )
+    niceplot = pt.RainCloud( x = 'variavb', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h' )
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
