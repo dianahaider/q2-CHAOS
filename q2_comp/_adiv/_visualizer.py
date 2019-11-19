@@ -96,7 +96,7 @@ def adiv_raincloud(output_dir: str,
     melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Method', 'value':'Sequencing Depth'})
 
 
-    niceplot = pt.RainCloud( x = 'variavb', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h' )
+    niceplot = pt.RainCloud( x = 'Method', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h' )
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
