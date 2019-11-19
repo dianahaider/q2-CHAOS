@@ -67,14 +67,16 @@ plugin.visualizers.register_function(
         'table2': FeatureTable[Frequency]
     },
     parameters={
-        'sample_metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
+        'metadata': Metadata,
+        'metadata_col': Str #can seaborn support numerical metadata
     },
     input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',
         'table2': 'Frequency feature table containing the samples to be compared'
     },
     parameter_descriptions={
-        'sample_metadata': 'Categorical metadata column to map plot to different colors.'
+        'metadata': 'Sample metadata',
+        'metadata_col': 'Categorical metadata column to map plot to different colors.'
     },
     name='Frequency count boxplot',
     description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",

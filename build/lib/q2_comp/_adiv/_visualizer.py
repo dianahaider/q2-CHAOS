@@ -51,12 +51,10 @@ def adiv_pairwise(output_dir: str,
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
 
-
     niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'])
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
-
 
     index = os.path.join(TEMPLATES, 'assets', 'index.html')
     q2templates.render(index, output_dir)
@@ -64,32 +62,44 @@ def adiv_pairwise(output_dir: str,
 #    table_preview = metadata.to_html()
 #    print(table_preview)
 
-
-
-
-
-
-
-
-
 def adiv_raincloud(output_dir: str,
-                    table1: biom.Table,
-                    table2: biom.Table,
-                    sample_metadata: qiime2.CategoricalMetadataColumn) -> None:
+                table1: biom.Table,
+                table2: biom.Table,
+                metadata_col: str,
+                metadata: qiime2.Metadata) -> None:
+#try to change column to str and metadata as the file
+    number_of_features1, number_of_samples1 = table1.shape
+    number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
-    table1, axis='sample')
+    table1, axis = 'sample')
     sample_frequencies1.sort_values(inplace=True, ascending=False)
     sample_frequencies1.to_csv(
                 os.path.join(output_dir, 'sample-frequency-detail1.csv'))
     sample_frequencies2 = _frequencies(
-        table2, axis='sample')
+        table2, axis = 'sample')
     sample_frequencies2.sort_values(inplace=True, ascending=False)
     sample_frequencies2.to_csv(
                 os.path.join(output_dir, 'sample-frequency-detail2.csv'))
-    smpl = pd.merge(sample_frequencies1, sample_frequencies2, on = 'sample')
-    smpl = pd.melt(smpl, id_vars = 'sample-id')
-    return pt.RainCloud(x = 'variable', y = 'value', data = smpl, orient = 'h',
-                        hue = sample_metadata)
+    sample_frequencies_df1 = sample_frequencies1.to_frame()
+    sample_frequencies_df2 = sample_frequencies2.to_frame()
+    metadata = metadata.to_dataframe()
+    metadata.index.name = "sample-id"
+    metadata.reset_index(inplace = True)
+    sample_frequencies_df1.index.name = "sample-id"
+    sample_frequencies_df1.reset_index(inplace=True)
+    sample_frequencies_df2.index.name = "sample-id"
+    sample_frequencies_df2.reset_index(inplace=True)
+    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+    smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
+    smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
+
+    niceplot = pt.RainCloud( x = 'Method', y = 'Sequencing Depth', data = smpl_metadata, orient = 'h' )
+    niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
+    niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
+    plt.gcf().clear()
+
+    index = os.path.join(TEMPLATES, 'assets', 'index.html')
+    q2templates.render(index, output_dir)
 
 
 def adiv_stats(output_dir: str,
