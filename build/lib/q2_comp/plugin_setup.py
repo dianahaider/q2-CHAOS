@@ -68,7 +68,7 @@ plugin.visualizers.register_function(
     },
     parameters={
         'metadata': Metadata,
-        'metadata_col': Str #can seaborn support numerical metadata
+        'metadata_col': Str
     },
     input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',

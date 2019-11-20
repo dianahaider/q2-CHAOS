@@ -56,7 +56,7 @@ def adiv_pairwise(output_dir: str,
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
 
-    index = os.path.join(TEMPLATES, 'assets', 'index.html')
+    index = os.path.join(TEMPLATES, 'pairwise_assets', 'index.html')
     q2templates.render(index, output_dir)
 
 #    table_preview = metadata.to_html()
@@ -91,14 +91,17 @@ def adiv_raincloud(output_dir: str,
     sample_frequencies_df2.reset_index(inplace=True)
     smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
+    melted_smpl = pd.melt(smpl, id_vars = 'sample-id')
+    melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
+    melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
-    niceplot = pt.RainCloud( x = 'Method', y = 'Sequencing Depth', data = smpl_metadata, orient = 'h' )
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
+
+    niceplot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65 )
+    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.png'))
+    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'))
     plt.gcf().clear()
 
-    index = os.path.join(TEMPLATES, 'assets', 'index.html')
+    index = os.path.join(TEMPLATES, 'raincloud_assets', 'index.html')
     q2templates.render(index, output_dir)
 
 
