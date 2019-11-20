@@ -25,7 +25,6 @@ def adiv_pairwise(output_dir: str,
                 table2: biom.Table,
                 metadata_col: str,
                 metadata: qiime2.Metadata) -> None:
-#try to change column to str and metadata as the file
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -67,7 +66,6 @@ def adiv_raincloud(output_dir: str,
                 table2: biom.Table,
                 metadata_col: str,
                 metadata: qiime2.Metadata) -> None:
-#try to change column to str and metadata as the file
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -96,14 +94,48 @@ def adiv_raincloud(output_dir: str,
     melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
 
-    niceplot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65 )
-    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.png'))
-    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'))
+    niceplot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65, palette = 'husl' )
+    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+    niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'raincloud_assets', 'index.html')
     q2templates.render(index, output_dir)
 
+def adiv_raincloud_vector(output_dir: str,
+                alpha_diversity1: pd.Series,
+                alpha_diversity2: pd.Series,
+                metadata_col: str,
+                metadata: qiime2.Metadata) -> None:
+
+    alpha_div1 = alpha_diversity1.to_frame()
+    alpha_div2 = alpha_diversity2.to_frame()
+    metadata = metadata.to_dataframe()
+    metadata.index.name = "sample-id"
+    metadata.reset_index(inplace = True)
+    alpha_div1.index.name = "sample-id"
+    alpha_div1.reset_index(inplace=True)
+    alpha_div2.index.name = "sample-id"
+    alpha_div2.reset_index(inplace=True)
+    smpl = pd.merge(alpha_div1, alpha_div2, on = "sample-id")
+    smpl = smpl.rename(columns = {'0_x':'Vector 1', '0_y':'Vector 2'})
+    melted_smpl = pd.melt(smpl, id_vars = 'sample-id')
+    melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
+    melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Vectors', 'value':'A diversity'})
+
+    niceplot = pt.RainCloud( x = 'Vectors', y = 'A diversity', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65, palette = 'husl' )
+    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.png'), bbox_inches = 'tight')
+    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
+    index = os.path.join(TEMPLATES, 'rainclouda_assets', 'index.html')
+    q2templates.render(index, output_dir)
+
+"""
+    table_preview = melted_smpl_metadata.to_html()
+    with open('outfile.html', 'w') as file:
+        file.write(table_preview)
+"""
 
 def adiv_stats(output_dir: str,
                     table1: biom.Table,

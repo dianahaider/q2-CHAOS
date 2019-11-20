@@ -16,7 +16,9 @@ setup(
     zip_safe=False,
     #include non .py files such as txt html bib
     package_data={'q2_comp._adiv': [
-                    'assets/index.html'],
+                    'pairwise_assets/index.html',
+                    'raincloud_assets/index.html'
+                    'rainclouda_assets/index.html'],
                     'q2_comp':['citations.bib']
                     #eventually add the other ones too
                     },

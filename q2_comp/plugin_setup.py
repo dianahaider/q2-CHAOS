@@ -82,6 +82,29 @@ plugin.visualizers.register_function(
     description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
 )
 
+#test function here for a_div vectors
+plugin.visualizers.register_function(
+    function=q2_comp.adiv_raincloud_vector,
+    inputs={
+        'alpha_diversity1': SampleData[AlphaDiversity],
+        'alpha_diversity2': SampleData[AlphaDiversity]
+    },
+    parameters={
+        'metadata': Metadata,
+        'metadata_col': Str
+    },
+    input_descriptions={
+        'alpha_diversity1': 'Frequency feature table containing the samples to be compared.',
+        'alpha_diversity2': 'Frequency feature table containing the samples to be compared'
+    },
+    parameter_descriptions={
+        'metadata': 'Sample metadata',
+        'metadata_col': 'Categorical metadata column to map plot to different colors.'
+    },
+    name='Frequency count boxplot',
+    description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
+)
+
 #third function; statistical significance of adiv comparison
 plugin.visualizers.register_function(
     function=q2_comp.adiv_stats,
