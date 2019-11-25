@@ -1,6 +1,7 @@
 #add license
 
-from qiime2.plugin import (Str, Citations, Plugin, Visualization, MetadataColumn, Categorical, Metadata, Set, Numeric)
+from qiime2.plugin import   (Str, Citations, Plugin, Visualization, MetadataColumn,
+                            Categorical, Metadata, Set, Numeric, Choices)
 #import versioneer
 
 
@@ -58,7 +59,7 @@ plugin.visualizers.register_function(
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,
 
 )
-
+#maybe can add parameters for labels
 #second function: raincloud plot for a diversity or feature table (both boxplot and density plot)
 plugin.visualizers.register_function(
     function=q2_comp.adiv_raincloud,
@@ -105,6 +106,7 @@ plugin.visualizers.register_function(
     description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
 )
 
+"""
 #third function; statistical significance of adiv comparison
 plugin.visualizers.register_function(
     function=q2_comp.adiv_stats,
@@ -114,7 +116,8 @@ plugin.visualizers.register_function(
     },
     parameters={
         'sample_metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
-    },
+    },from q2_types.feature_table import DADA2Stats
+
     input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',
         'table2': 'Frequency feature table containing the samples to be compared'
@@ -128,7 +131,7 @@ plugin.visualizers.register_function(
 
 #add pipeline function for all a_div
 
-"""
+
 #function4: alternative to mantel test.... or combination of 2 plots
 #take as input distance matrices
 plugin.visualizers.register_function(
@@ -161,28 +164,36 @@ plugin.visualizers.register_function(
     citations=[]
 
 )
-
+"""
 
 #function5: denoise bar diagram take as input stats from qiime2 can only do dada2 for now!
 plugin.visualizers.register_function(
-    function=q2_comp._denoise,
+    function=q2_comp.denoise_vis,
     inputs={
         'stats1': SampleData[DADA2Stats],
         'stats2': SampleData[DADA2Stats]
     },
+    parameters={
+        'plot_type': Str % Choices (['line', 'bar']),
+        'label1' : Str, #add default stats1, stats2, etc.
+        'label2' : Str
+    },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     input_descriptions={
-        'stats1': 'Denoising statistics from DADA2',
-        'stats2': 'Denoising statistics from DADA2 with different parameters.'
+        'stats1': 'Denoising statistics from DADA2.',
+        'stats2': 'Denoising statistics from DADA2.'
     },
-    parameters={
-
-    }
+    parameter_descriptions={
+        'plot_type': 'Type of plot visualization.',
+        'label1': 'Label for stats1 in the visualization.',
+        'label2': 'Label for stats2 in the visualization.'
+    },
     name= 'Denoising statistics comparison',
     description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
 )
 
 
+"""
 #function6: machine learning for prediction of sample metadata
 #in qiime2 you can do -classify samples (nested cross validation)
                     # -fit supervised learning

@@ -6,27 +6,31 @@ import shutil
 import qiime2
 import q2templates
 
-from q2_types.feature_table import FeatureTable, Frequency
-
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
 import ptitprince as pt
-import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
 import skbio
 
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 #def merge_df(filenames, metadata=None, var=None):
 def denoise_vis(output_dir: str,
-                table1: biom.Table,
-                table2: biom.Table,
-                metadata_col: str,
-                metadata: qiime2.Metadata) -> None:
-    number_of_features1, number_of_samples1 = table1.shape
-    number_of_features2, number_of_samples2 = table2.shape
+                stats1: pd.DataFrame,
+                stats2: pd.DataFrame,
+                plot_type: 'line',
+                label1: str = 'Stats 1',
+                label2: str = 'Stats 2') -> None:
+    numeric = ['denoised','filtered','input','merged','non-chimeric']
+    stats1[numeric] = stats[numeric].apply(pd.to_numeric)
+
+    table_preview = stats1.to_html()
+    print(table_preview)
+
+"""
+
     sample_frequencies1 = _frequencies(
     table1, axis = 'sample')
     sample_frequencies1.sort_values(inplace=True, ascending=False)
@@ -57,6 +61,6 @@ def denoise_vis(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'pairwise_assets', 'index.html')
     q2templates.render(index, output_dir)
-
+"""
 #    table_preview = metadata.to_html()
 #    print(table_preview)

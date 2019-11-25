@@ -19,7 +19,8 @@ setup(
                     'pairwise_assets/index.html',
                     'raincloud_assets/index.html',
                     'rainclouda_assets/index.html'],
-                    'q2_comp':['citations.bib']
+                    'q2_comp._denoise': ['denoise_assets/index.html'],
+                    'q2_comp': ['citations.bib']
                     #eventually add the other ones too
                     },
 
