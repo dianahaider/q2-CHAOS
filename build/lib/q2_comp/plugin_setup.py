@@ -131,6 +131,40 @@ plugin.visualizers.register_function(
 
 #add pipeline function for all a_div
 
+plugin.pipelines.register_function(
+    functin=q2_comp.all_alpha_comparison,
+    inputs={
+        'table': List[Frequency],
+        'alpha_diveristy': List[AlphaDiversity]
+    },
+    parameters={
+        'metadata': Metadata,
+        'metadata_col': Str
+    },
+    outputs=[
+        ('pairwise', Visualization),
+        ('raincloud', Visualization),
+        ('violin', Visualization),
+    ],
+    input_descriptions={
+        'table': 'List of all feature tables to be compared',
+        'alpha_diversty': 'List of alpha diversity vectors to be compared'
+    },
+    paremeter_descriptions={
+        'metadata': 'Sample metadata to use in the visualizations.',
+        'metadata_col': 'Sample metadata column to use to color plots in visualization.'
+    },
+    output_descriptions={
+        'pairwise': 'Pairwise plot.',
+        'raincloud': 'Raincloud plot.',
+        'violin': 'Violin plot.'
+    },
+    name='All alpha diversity visual comparisons',
+    description='Compute multiple visualizations for the comparison of '
+                'resulting diversity when using different parameters.'
+)
+
+
 
 #function4: alternative to mantel test.... or combination of 2 plots
 #take as input distance matrices

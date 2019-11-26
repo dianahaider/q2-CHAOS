@@ -18,8 +18,8 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 #def merge_df(filenames, metadata=None, var=None):
 def denoise_vis(output_dir: str,
-                stats1: pd.DataFrame,
-                stats2: pd.DataFrame,
+                stats1: pd.Series,
+                stats2: pd.Series,
                 plot_type: 'line',
                 label1: str = 'Stats 1',
                 label2: str = 'Stats 2') -> None:

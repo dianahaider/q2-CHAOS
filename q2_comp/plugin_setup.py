@@ -130,7 +130,7 @@ plugin.visualizers.register_function(
 )
 
 #add pipeline function for all a_div
-"""
+
 plugin.pipelines.register_function(
     functin=q2_comp.all_alpha_comparison,
     inputs={
@@ -165,7 +165,7 @@ plugin.pipelines.register_function(
 )
 
 
-"""
+
 #function4: alternative to mantel test.... or combination of 2 plots
 #take as input distance matrices
 plugin.visualizers.register_function(
@@ -291,3 +291,13 @@ plugin.visualizers.register_function(
 
 )
 """
+
+
+
+
+
+plugin.register_formats(DADA2StatsFormat, DADA2StatsDirFmt)
+plugin.register_semantic_types(DADA2Stats)
+plugin.register_semantic_type_to_format(
+    SampleData[DADA2Stats], DADA2StatsDirFmt)
+importlib.import_module('q2_dada2._transformer')
