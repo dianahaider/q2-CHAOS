@@ -18,18 +18,14 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 #def merge_df(filenames, metadata=None, var=None):
 def denoise_vis(output_dir: str,
-                stats1: pd.Series,
-                stats2: pd.Series,
+                stats1: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
+                stats2: qiime2.Metadata,
                 plot_type: 'line',
                 label1: str = 'Stats 1',
                 label2: str = 'Stats 2') -> None:
+    stats1 = stats1.to_dataframe()
     numeric = ['denoised','filtered','input','merged','non-chimeric']
     stats1[numeric] = stats[numeric].apply(pd.to_numeric)
-
-    table_preview = stats1.to_html()
-    print(table_preview)
-
-"""
 
     sample_frequencies1 = _frequencies(
     table1, axis = 'sample')
@@ -61,6 +57,3 @@ def denoise_vis(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'pairwise_assets', 'index.html')
     q2templates.render(index, output_dir)
-"""
-#    table_preview = metadata.to_html()
-#    print(table_preview)

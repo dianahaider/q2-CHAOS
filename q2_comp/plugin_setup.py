@@ -291,13 +291,3 @@ plugin.visualizers.register_function(
 
 )
 """
-
-
-
-
-
-plugin.register_formats(DADA2StatsFormat, DADA2StatsDirFmt)
-plugin.register_semantic_types(DADA2Stats)
-plugin.register_semantic_type_to_format(
-    SampleData[DADA2Stats], DADA2StatsDirFmt)
-importlib.import_module('q2_dada2._transformer')
