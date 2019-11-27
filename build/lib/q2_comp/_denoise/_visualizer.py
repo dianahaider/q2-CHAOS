@@ -11,57 +11,65 @@ import numpy as np
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
-import ptitprince as pt
 import skbio
 
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 #def merge_df(filenames, metadata=None, var=None):
+
 def denoise_vis(output_dir: str,
-                stats1: qiime2.Metadata,
+                stats1: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 stats2: qiime2.Metadata,
                 plot_type: 'line',
                 label1: str = 'Stats 1',
                 label2: str = 'Stats 2') -> None:
-    stats1 = stats1.to_dataframe()
-    table_preview = stats1.to_html()
-    with open('outfile.html', 'w') as file:
+    df1 = stats1.to_dataframe()
+    df2 = stats2.to_dataframe()
+    df1['id'] = label1
+    df2['id'] = label2
+
+    inputs = [df1, df2]
+    df = []
+    for i in inputs:
+        df.append(i)
+
+    df = pd.concat(df, sort = True)
+
+    df = df.groupby('id').sum()
+    new_df = pd.melt(df.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
+
+
+
+
+    table_preview=new_df.to_html()
+    with open('outfile.html','w') as file:
         file.write(table_preview)
 
 """
-    numeric = ['denoised','filtered','input','merged','non-chimeric']
-    stats1[numeric] = stats[numeric].apply(pd.to_numeric)
 
-    sample_frequencies1 = _frequencies(
-    table1, axis = 'sample')
-    sample_frequencies1.sort_values(inplace=True, ascending=False)
-    sample_frequencies1.to_csv(
-                os.path.join(output_dir, 'sample-frequency-detail1.csv'))
-    sample_frequencies2 = _frequencies(
-        table2, axis = 'sample')
-    sample_frequencies2.sort_values(inplace=True, ascending=False)
-    sample_frequencies2.to_csv(
-                os.path.join(output_dir, 'sample-frequency-detail2.csv'))
-    sample_frequencies_df1 = sample_frequencies1.to_frame()
-    sample_frequencies_df2 = sample_frequencies2.to_frame()
-    metadata = metadata.to_dataframe()
-    metadata.index.name = "sample-id"
-    metadata.reset_index(inplace = True)
-    sample_frequencies_df1.index.name = "sample-id"
-    sample_frequencies_df1.reset_index(inplace=True)
-    sample_frequencies_df2.index.name = "sample-id"
-    sample_frequencies_df2.reset_index(inplace=True)
-    smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
-    smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
 
-    niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'])
+    input = [stats1, stats2]
+    labels = [label1, label2]
+    stats_df = []
+    for i in input:
+        df = i.to_dataframe()
+        for j in labels
+        df['id'] =
+        stats_df.append(df)
+
+    stats_df = pd.concat(stats_df)
+    stats_df = stats_df[list(stats_df.columns[-7:])]
+
+    numeric = ['input','denoised','filtered','merged','non-chimeric']
+    df[numeric] = df[numeric].apply(pd.to_numeric)
+    sums = pd.DataFrame(data=None, columns=['Input','Filtered','Denoised','Merged','Non-chimeric'])
+    sums = sums.append(df.iloc[:,1:6].sum(), ignore_index=True)
+
+    denoise_barplot = plt.bar( )
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
 
-    index = os.path.join(TEMPLATES, 'pairwise_assets', 'index.html')
+    index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
 """
-#    table_preview = metadata.to_html()
-#    print(table_preview)
