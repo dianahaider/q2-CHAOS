@@ -39,7 +39,7 @@ def denoise_vis(output_dir: str,
     new_df = pd.melt(df.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_num = new_df['read_number'].max() #to normalize your data
     df['% of Reads Remaining'] = df['read_number'] / input_read_num * 100
-    step_order = {'input':0, 'filtered':1, 'denoised'}
+    step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
 
 
 
