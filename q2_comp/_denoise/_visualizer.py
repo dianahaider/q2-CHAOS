@@ -28,7 +28,7 @@ def denoise_vis(output_dir: str,
     df1['id'] = label1
     df2['id'] = label2
 
-    inputs = [df1, df2]
+    inputs = [df1, df2] #change it to list input for n stats file
     df = []
     for i in inputs:
         df.append(i)
