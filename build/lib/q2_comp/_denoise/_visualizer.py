@@ -28,7 +28,7 @@ def denoise_vis(output_dir: str,
     df1['id'] = label1
     df2['id'] = label2
 
-    inputs = [df1, df2]
+    inputs = [df1, df2] #change it to list input for n stats file
     df = []
     for i in inputs:
         df.append(i)
@@ -37,39 +37,26 @@ def denoise_vis(output_dir: str,
 
     df = df.groupby('id').sum()
     new_df = pd.melt(df.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
+    input_read_num = new_df['read_number'].max() #to normalize your data with input (input is the highest read_number)
+    new_df['% of Reads Remaining'] = new_df['read_number'] / input_read_num * 100
+    step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
+    new_df['order'] = new_df['step'].apply(lambda x: step_order[x])
+    new_df = new_df.reset_index()
+
+    sns.set_style('whitegrid')
+    sns.set_context('talk')
+
+    sns.lineplot(data = df, y='% of Reads Remaining', x='order', hue='Run Number')
+    plt.ylim(0,100)
+    plt.xlim(0,4)
+    plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-Chimeric'])
+    plt.xlabel('Processing Steps')
+    plt.title('Parameter Settings')
 
 
-
-
-    table_preview=new_df.to_html()
-    with open('outfile.html','w') as file:
-        file.write(table_preview)
-
-"""
-
-
-    input = [stats1, stats2]
-    labels = [label1, label2]
-    stats_df = []
-    for i in input:
-        df = i.to_dataframe()
-        for j in labels
-        df['id'] =
-        stats_df.append(df)
-
-    stats_df = pd.concat(stats_df)
-    stats_df = stats_df[list(stats_df.columns[-7:])]
-
-    numeric = ['input','denoised','filtered','merged','non-chimeric']
-    df[numeric] = df[numeric].apply(pd.to_numeric)
-    sums = pd.DataFrame(data=None, columns=['Input','Filtered','Denoised','Merged','Non-chimeric'])
-    sums = sums.append(df.iloc[:,1:6].sum(), ignore_index=True)
-
-    denoise_barplot = plt.bar( )
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
+    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.png'))
+    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.pdf'))
     plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
-"""
