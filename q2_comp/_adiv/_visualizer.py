@@ -50,6 +50,11 @@ def adiv_pairwise(output_dir: str,
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
 
+    sns.set_style('ticks')
+    sns.set_context('paper')
+
+
+
     niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'])
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
@@ -65,7 +70,10 @@ def adiv_raincloud(output_dir: str,
                 table1: biom.Table,
                 table2: biom.Table,
                 metadata_col: str,
-                metadata: qiime2.Metadata) -> None:
+                metadata: qiime2.Metadata,
+                palette: str = 'husl',
+                style: str = 'ticks',
+                context: str = 'paper') -> None:
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -93,8 +101,12 @@ def adiv_raincloud(output_dir: str,
     melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
     melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
+    sns.set_style(style)
+    sns.set_context(context)
 
-    niceplot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65, palette = 'husl' )
+
+    niceplot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_smpl_metadata,
+                orient = 'h', hue = metadata_col, alpha = 0.65, palette = (sns.set_palette(palette)) )
     niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
     niceplot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()

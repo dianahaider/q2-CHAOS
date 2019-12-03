@@ -17,12 +17,17 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 #def merge_df(filenames, metadata=None, var=None):
 
+def plot_types():
+    return {'line', 'bar'}
+
 def denoise_vis(output_dir: str,
                 stats1: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 stats2: qiime2.Metadata,
-                plot_type: 'line',
+                plot_type: str = 'line',
                 label1: str = 'Stats 1',
-                label2: str = 'Stats 2') -> None:
+                label2: str = 'Stats 2',
+                style: str = 'whitegrid',
+                context: str = 'talk') -> None:
     df1 = stats1.to_dataframe()
     df2 = stats2.to_dataframe()
     df1['id'] = label1
@@ -45,8 +50,6 @@ def denoise_vis(output_dir: str,
     new_df = new_df.reset_index()
 
     hue_order = new_df.query('step == "non-chimeric"').sort_values('% of Reads Remaining', ascending = False)
-    sns.set_style('whitegrid')
-    sns.set_context('talk')
 
     sns.lineplot(data = new_df, y='% of Reads Remaining', x='order', hue='id')
     plt.ylim(0,100)
@@ -55,9 +58,11 @@ def denoise_vis(output_dir: str,
     plt.xlabel('Processing Steps')
     plt.title('Parameter Settings')
 
+    sns.set_style(style)
+    sns.set_context(context)
 
-    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.png'))
-    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.pdf'))
+    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.png'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(output_dir, 'linegraph_denoise.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')

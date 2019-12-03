@@ -69,7 +69,10 @@ plugin.visualizers.register_function(
     },
     parameters={
         'metadata': Metadata,
-        'metadata_col': Str
+        'metadata_col': Str,
+        'palette': Str,
+        'style': Str,
+        'context': Str
     },
     input_descriptions={
         'table1': 'Frequency feature table containing the samples to be compared.',
@@ -77,7 +80,10 @@ plugin.visualizers.register_function(
     },
     parameter_descriptions={
         'metadata': 'Sample metadata',
-        'metadata_col': 'Categorical metadata column to map plot to different colors.'
+        'metadata_col': 'Categorical metadata column to map plot to different colors.',
+        'palette': 'Palette to be chosen from seaborn color palette. Existing color palettes are available through seaborn website.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
     },
     name='Frequency count boxplot',
     description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
@@ -210,7 +216,9 @@ plugin.visualizers.register_function(
     parameters={
         'plot_type': Str % Choices (['line', 'bar']),
         'label1' : Str, #add default stats1, stats2, etc.
-        'label2' : Str
+        'label2' : Str,
+        'style' : Str,
+        'context' : Str
     },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     input_descriptions={
@@ -220,7 +228,9 @@ plugin.visualizers.register_function(
     parameter_descriptions={
         'plot_type': 'Type of plot visualization.',
         'label1': 'Label for stats1 in the visualization.',
-        'label2': 'Label for stats2 in the visualization.'
+        'label2': 'Label for stats2 in the visualization.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
     },
     name= 'Denoising statistics comparison',
     description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",

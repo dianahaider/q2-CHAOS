@@ -1,5 +1,7 @@
+README.md
 setup.py
 q2_comp/__init__.py
+q2_comp/_core_metrics.py
 q2_comp/citations.bib
 q2_comp/plugin_setup.py
 q2_comp.egg-info/PKG-INFO
