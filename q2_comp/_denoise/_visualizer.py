@@ -41,13 +41,14 @@ def denoise_vis(output_dir: str,
     new_df['% of Reads Remaining'] = new_df['read_number'] / input_read_num * 100
     step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
     new_df['order'] = new_df['step'].apply(lambda x: step_order[x])
+    new_df['order'] = new_df['order'].apply(pd.to_numeric)
     new_df = new_df.reset_index()
 
     hue_order = new_df.query('step == "non-chimeric"').sort_values('% of Reads Remaining', ascending = False)
     sns.set_style('whitegrid')
     sns.set_context('talk')
 
-    sns.lineplot(data = df, y='% of Reads Remaining', x='order', hue='Run Number')
+    sns.lineplot(data = new_df, y='% of Reads Remaining', x='order', hue='id')
     plt.ylim(0,100)
     plt.xlim(0,4)
     plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-Chimeric'])
@@ -61,3 +62,8 @@ def denoise_vis(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
+
+
+    table_preview = new_df.to_html()
+    with open('outfile.html', 'w') as file:
+        file.write(table_preview)
