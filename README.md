@@ -3,10 +3,15 @@
 QIIME2 plugin for comparison of results <br>
 For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.
 
-## Getting started
+## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
 
-The first step in sequencing data analysis is the cleaning of the data.
-#all vis has option ot change palette style &context
+<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; CHAOS both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
+<br>
+<br>
+Pairwise comparison of alpha diversity or frequency tables
+<br>
+<br>
+All visualizations can be tweaked by preferences for color palette, style and context.
 
 
 ## Alpha
