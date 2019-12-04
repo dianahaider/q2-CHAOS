@@ -91,8 +91,11 @@ def denoise_list(output_dir: str,
         for i in range(len(input_stats)):
             temp_df = input_stats[i].to_dataframe()
             temp_df['id'] = (i+1)
+            new_df['id'] = new_df['id'].apply(pd.to_numeric)
             df.append(temp_df)
+
     else:
+
         for i in range(len(input_stats)):
             temp_df = input_stats[i].to_dataframe()
             temp_df['id'] = labels[i]
@@ -107,7 +110,6 @@ def denoise_list(output_dir: str,
     step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
     new_df['order'] = new_df['step'].apply(lambda x: step_order[x])
     new_df['order'] = new_df['order'].apply(pd.to_numeric)
-    new_df['id'] = new_df['id'].apply(pd.to_numeric)
 
     new_df = new_df.reset_index()
 
