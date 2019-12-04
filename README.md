@@ -11,7 +11,8 @@ CHAOS conducts pairwise comparisons of alpha diversity or frequency tables, and 
 <br>
 All visualizations can be tweaked by preferences for color palette, style and context.
 
-![tutorial_V1](https://github.com/dianahaider/q2-comp/blob/master/tutorial/tuto_v1.0.png){:height="25%" width="25%"}
+![tutorial_V1](https://github.com/dianahaider/q2-comp/blob/master/tutorial/tuto_v1.0.png)
+
 
 ## Alpha
 
