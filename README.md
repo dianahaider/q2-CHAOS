@@ -32,7 +32,10 @@ qiime comp alpha-index \
   --p-metadata-col depth \
   --o-visualization visualization_index.qzv
 ```
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization_index.qzv</a>
+<b>Output artifacts:</b>
+<ul>
+  <li>visualization_index.qzv <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a>
+</ul>
 
 And just def
 
@@ -47,9 +50,13 @@ qiime comp alpha-core \
   --o-visualization visualization_merged.qzv
 
 ```
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization_index.qzv</a>
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization_frequency.qzv</a>
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization_merged.qzv</a>
+
+<b>Output artifacts:</b>
+<ul>
+  <li> <span style="background-color:#00FEFE">visualization_index.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a> </li>
+  <li><span style="background-color:#00FEFE">visualization_frequency.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
+  <li><span style="background-color:#00FEFE">visualization_merged.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
+</ul>
 
 ### Denoise
 
@@ -61,4 +68,7 @@ qiime comp denoise \
   --p-labels Method1 Method2 Method3
   --o-visualization visualization.qzv
 ```
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization.qzv</a>
+<b>Output artifacts:</b>
+<ul>
+  <li> <span style="background-color:#00FEFE">visualization.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a> </li>
+</ul>
