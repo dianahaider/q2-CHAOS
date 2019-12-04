@@ -11,6 +11,8 @@ CHAOS conducts pairwise comparisons of alpha diversity or frequency tables, and 
 <br>
 All visualizations can be tweaked by preferences for color palette, style and context.
 
+![tutorial_V1](https://github.com/dianahaider/q2-comp/blob/master/tutorial/tutorial_v1.svg)
+
 ## Alpha
 
 Feature tables of frequency or alpha diversity indices artifacts can be compared through three visualizations and one table. The pairwise plot shows the correlation between each pair of samples between each method, and the density plot of each method is displaned in the diagonale. The raincloud plot shows both the density plot and a box plot for each method.
