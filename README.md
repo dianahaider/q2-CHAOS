@@ -5,7 +5,9 @@ For descriptions on how to install and run this plugin, see  <a href="https://gi
 
 ## Getting started
 
-For all vis has the option to change palette, style and context of visualizations.
+The first step in sequencing data analysis is the cleaning of the data.
+#all vis has option ot change palette style &context
+
 
 ## Alpha
 
