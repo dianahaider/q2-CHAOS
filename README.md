@@ -5,7 +5,7 @@ For descriptions on how to install and run this plugin, see  <a href="https://gi
 
 ## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
 
-<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; CHAOS both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
+<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; &#129327; CHAOS both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
 <br>
 <br>
 Pairwise comparison of alpha diversity or frequency tables
