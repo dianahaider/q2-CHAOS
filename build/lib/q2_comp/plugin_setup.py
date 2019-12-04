@@ -1,7 +1,7 @@
 #add license
 
 from qiime2.plugin import   (Str, Citations, Plugin, Visualization, MetadataColumn,
-                            Categorical, Metadata, Set, Numeric, Choices)
+                            Categorical, Metadata, Set, Numeric, Choices, List)
 #import versioneer
 
 
@@ -211,7 +211,7 @@ plugin.visualizers.register_function(
     function=q2_comp.denoise_vis,
     inputs={
         'stats1': SampleData[DADA2Stats],
-        'stats2': SampleData[DADA2Stats]
+        'stats2': SampleData[DADA2Stats],
     },
     parameters={
         'plot_type': Str % Choices (['line', 'bar']),
@@ -235,6 +235,32 @@ plugin.visualizers.register_function(
     name= 'Denoising statistics comparison',
     description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
 )
+
+plugin.visualizers.register_function(
+    function=q2_comp.denoise_list,
+    inputs={
+        'input_stats': List[SampleData[DADA2Stats]],
+    },
+    parameters={
+        'plot_type': Str % Choices (['line', 'bar']),
+        'labels' : List[Str], #add default stats1, stats2, etc.
+        'style' : Str,
+        'context' : Str
+    },
+    #no metadata here! UNLESS think of complex figure able to show per md categorical column
+    input_descriptions={
+        'input_stats': 'Denoising statistics from DADA2.',
+    },
+    parameter_descriptions={
+        'plot_type': 'Type of plot visualization.',
+        'labels': 'Label for stats1 in the visualization.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
+    },
+    name= 'Denoising statistics comparison',
+    description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
+)
+
 
 
 """
