@@ -20,10 +20,10 @@ qiime comp alpha-frequency \
 ```
 <b>Output artifacts:</b>
 <ul>
-  <li> <mark>visualization_frequency.qzv</mark> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a> </li>
+  <li> <span style="background-color:#00FEFE">visualization_frequency.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a> </li>
 </ul>
 
-Can also abc
+Can also abc <p>&#128520;</p>
 
 ```
 qiime comp alpha-index \
