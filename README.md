@@ -7,7 +7,7 @@ For descriptions on how to install and run this plugin, see  <a href="https://gi
 
 For all vis has the option to change palette, style and context of visualizations.
 
-### Alpha
+## Alpha
 
 This function xyz
 
@@ -18,7 +18,10 @@ qiime comp alpha-frequency \
   --p-metadata-col depth \
   --o-visualization visualization_frequency.qzv
 ```
-<a href="https://github.com/dianahaider/q2-comp/wiki">visualization_frequency.qzv</a>
+<b>Output artifacts:</b>
+<ul>
+  <li> <mark>visualization_frequency.qzv</mark> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a> </li>
+</ul>
 
 Can also abc
 
