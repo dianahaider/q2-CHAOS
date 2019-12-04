@@ -7,16 +7,15 @@ For descriptions on how to install and run this plugin, see  <a href="https://gi
 
 <p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; &#129327; CHAOS both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
 <br>
-<br>
-Pairwise comparison of alpha diversity or frequency tables
-<br>
+CHAOS conducts pairwise comparisons of alpha diversity or frequency tables, and comparisons of denoising statistics.
 <br>
 All visualizations can be tweaked by preferences for color palette, style and context.
 
-
 ## Alpha
 
-This function xyz
+Feature tables of frequency or alpha diversity indices artifacts can be compared through three visualizations and one table. The pairwise plot shows the correlation between each pair of samples between each method, and the density plot of each method is displaned in the diagonale. The raincloud plot shows both the density plot and a box plot for each method.
+
+Cool trick: it can also produce simpler visualizations such as box plots or violin plots if that's your preference.
 
 ```
 qiime comp alpha-frequency \
@@ -33,7 +32,9 @@ qiime comp alpha-frequency \
   </ul>
 </p>
 
-Can also abc <p>&#128520;</p>
+
+
+
 
 ```
 qiime comp alpha-index \
