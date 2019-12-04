@@ -18,13 +18,14 @@ qiime comp alpha-frequency \
   --p-metadata-col depth \
   --o-visualization visualization_frequency.qzv
 ```
-span {
-  background-color: #f18973;
-}
+span {background-color: #F7D6CF;}
 <b>Output artifacts:</b>
-<ul>
-  <li> <p><span>visualization_frequency.qzv</span> </p> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
-</ul>
+<p>
+  <ul>
+    <li><span>visualization_frequency.qzv </span><a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a
+                                                                                                          href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
+  </ul>
+ </p>
 
 Can also abc <p>&#128520;</p>
 
