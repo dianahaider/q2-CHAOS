@@ -72,34 +72,34 @@ def denoise_vis(output_dir: str,
     with open('outfile.html', 'w') as file:
         file.write(table_preview)
 
+"""
 default_labels_for_denoise_list = []
 for i in range(1,100):
     i = str(i)
     default_labels_for_denoise_list.append(i)
-
+"""
 def denoise_list(output_dir: str,
                 input_stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
-                labels: str = default_labels_for_denoise_list,
+                labels: str = None,
                 plot_type: str = 'line',
                 style: str = 'whitegrid',
                 context: str = 'talk') -> None:
 
-#problem is if i dont put a default value labels becomes required and i cant call variable within functiosn
-
     df = []
 
-    for i in range(len(input_stats)):
-        temp_df = input_stats[i].to_dataframe()
-        temp_df['id'] = labels[i]
-        df.append(temp_df)
+    if not labels:
+        for i in range(len(input_stats)):
+            temp_df = input_stats[i].to_dataframe()
+            temp_df['id'] = (i+1)
+            df.append(temp_df)
+    else:
+        for i in range(len(input_stats)):
+            temp_df = input_stats[i].to_dataframe()
+            temp_df['id'] = labels[i]
+            df.append(temp_df)
 
     df = pd.concat(df, sort = True)
 
-    table_preview = df.to_html()
-    with open('outfile.html', 'w') as file:
-        file.write(table_preview)
-
-"""
     df = df.groupby('id').sum()
     new_df = pd.melt(df.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_num = new_df['read_number'].max() #to normalize your data with input (input is the highest read_number)
@@ -129,8 +129,3 @@ def denoise_list(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
-
-    table_preview = new_df.to_html()
-    with open('outfile.html', 'w') as file:
-        file.write(table_preview)
-"""

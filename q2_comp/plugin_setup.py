@@ -249,7 +249,7 @@ plugin.visualizers.register_function(
     },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     input_descriptions={
-        'input_stats': 'Denoising statistics from DADA2.',
+        'input_stats': 'List of denoising statistics from DADA2. All paths to file should be separated by a space only.',
     },
     parameter_descriptions={
         'plot_type': 'Type of plot visualization.',
@@ -258,7 +258,7 @@ plugin.visualizers.register_function(
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
     },
     name= 'Denoising statistics comparison',
-    description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
+    description= "Visually compare the denoising statistics from DADA2 when different sets of parameters to assess which denoising steps are more stringent to your dataset.",
 )
 
 
