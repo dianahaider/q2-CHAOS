@@ -21,7 +21,8 @@ qiime comp alpha-frequency \
 <b>Output artifacts:</b>
 <p>
   <ul>
-    <li> some text <span style = "background-color: #F7D6CF;">visualization_frequency.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
+    <li><span style = "background-color: #F7D6CF;">visualization_frequency.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a>
+    </li>
   </ul>
 </p>
 
