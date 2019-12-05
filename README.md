@@ -72,9 +72,9 @@ qiime comp alpha-core \
   <li><span style="background-color:#00FEFE">visualization_merged.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
 </ul>
 
-### Denoise
+## Denoise
 
-This functions xyz
+This functions xyz Blblalblablalbalblabla
 
 ```
 qiime comp denoise \
