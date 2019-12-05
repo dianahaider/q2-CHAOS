@@ -18,7 +18,7 @@ All visualizations can be tweaked by preferences for color palette, style and co
 
 Feature tables of frequency or alpha diversity indices artifacts can be compared through three visualizations and one table. The pairwise plot shows the correlation between each pair of samples between each method, and the density plot of each method is displaned in the diagonale. The raincloud plot shows both the density plot and a box plot for each method.
 
-Cool trick: it can also produce simpler visualizations such as box plots or violin plots if that's your preference.
+Cool trick: it can also produce simpler visualizations such as box plots or violin plots if that's your preference. All plots can be colored by categorical metadata colummns.
 
 ```
 qiime comp alpha-frequency \
