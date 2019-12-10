@@ -1,6 +1,6 @@
-# q2-comp
+# q2-CHAOS
 
-QIIME2 plugin for comparison of results <br>
+QIIME2 plugin for comparison of artifacts <br>
 For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.
 
 ## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
