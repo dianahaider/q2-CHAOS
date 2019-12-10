@@ -30,10 +30,10 @@ def alpha_frequency_compare(output_dir: str,
 
     merged_tables = []
 
-    for i in tables:
+    for i in range(len(tables)):
     #number_of_features1, number_of_samples1 = table1.shape
     #number_of_features2, number_of_samples2 = table2.shape
-        sample_frequencies = _frequencies(i, axis = 'sample')
+        sample_frequencies = _frequencies(tables[i], axis = 'sample')
         sample_frequencies.sort_values(inplace=True, ascending=False)
     #sample_frequencies.to_csv(
     #            os.path.join(output_dir, 'sample-frequency-detail1.csv'))
@@ -59,7 +59,7 @@ def alpha_frequency_compare(output_dir: str,
     #sample_frequencies_df2.reset_index(inplace=True)
     #smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
     #smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
+    smpl_metadata = pd.merge(merged_tables,metadata, on = "sample-id")
 
     sns.set_style(style)
     sns.set_context(context)
