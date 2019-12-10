@@ -2,8 +2,7 @@
 
 from qiime2.plugin import   (Str, Citations, Plugin, Visualization, MetadataColumn,
                             Categorical, Metadata, Set, Numeric, Choices, List)
-#import versioneer
-
+import versioneer
 
 #import my functions
 import q2_comp
@@ -28,17 +27,18 @@ plugin = Plugin (
     version='q2_comp.__version__',
     website='https://github.com/dianahaider/q2-comp',
     package='q2-comp',
-    description=('This QIIME2 plugin compares two or more feature tables'
-    '(generated) by different clustering methods from a single dataset'
-    'through statistics and visualizations.'),
-    short_description='Plugin to compare feature tables.',
+    description=('This QIIME2 plugin compares two or more feature tables,'
+    'alpha diversity vectors, taxonomy classification or denoising statistics'
+    'obtained from different denoising methods through statistics and '
+    'visualizations.'),
+    short_description='Plugin to compare artifacts by denoising methods.',
 )
 
 #register the functions
 #first function: pairwise comparison of either a diversity index (shannon) or feature table
 #maybe combine fun1 and fun2 and add an input 'method: str = {pairwise, raincloud}'
 plugin.visualizers.register_function(
-    function=q2_comp.adiv_pairwise,
+    function=q2_comp.alpha_frequency_compare,
     inputs={
         'tables': List[FeatureTable[Frequency]]
     },
