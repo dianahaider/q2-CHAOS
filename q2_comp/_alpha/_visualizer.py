@@ -14,19 +14,18 @@ import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
 import ptitprince as pt
-import biom #need biom bcs import table.qza (FeatureTable[Frequency] format is biomtable
+import biom
 import skbio
 
-TEMPLATES = pkg_resources.resource_filename('q2_comp', '_adiv')
+TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
-#def merge_df(filenames, metadata=None, var=None):
-def adiv_pairwise(output_dir: str,
+def alpha_frequency_compare(output_dir: str,
                 tables: biom.Table,
-                metadata_col: str,
+                metadata_column: str,
                 metadata: qiime2.Metadata,
                 palette: str = 'husl',
-                style: str = 'ticks',
-                context: str = '') -> None:
+                style: str = 'white',
+                context: str = 'paper') -> None:
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -52,12 +51,10 @@ def adiv_pairwise(output_dir: str,
     smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     smpl_metadata = pd.merge(smpl,metadata, on = "sample-id")
 
-    sns.set_style('ticks')
-    sns.set_context('paper')
+    sns.set_style(style)
+    sns.set_context(context)
 
-
-
-    niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'])
+    niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'], palette = palette)
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()

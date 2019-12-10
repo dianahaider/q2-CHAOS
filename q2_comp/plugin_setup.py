@@ -44,7 +44,7 @@ plugin.visualizers.register_function(
     },
     parameters={
         'metadata': Metadata, #can seaborn support numerical metadata?
-        'metadata_col': Str,
+        'metadata_column': Str,
         'palette': Str,
         'style': Str,
         'context': Str
