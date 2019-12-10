@@ -21,10 +21,12 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_adiv')
 
 #def merge_df(filenames, metadata=None, var=None):
 def adiv_pairwise(output_dir: str,
-                table1: biom.Table,
-                table2: biom.Table,
+                tables: biom.Table,
                 metadata_col: str,
-                metadata: qiime2.Metadata) -> None:
+                metadata: qiime2.Metadata,
+                palette: str = 'husl',
+                style: str = 'ticks',
+                context: str = '') -> None:
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(

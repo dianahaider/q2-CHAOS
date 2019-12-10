@@ -40,20 +40,24 @@ plugin = Plugin (
 plugin.visualizers.register_function(
     function=q2_comp.adiv_pairwise,
     inputs={
-        'table1': FeatureTable[Frequency],
-        'table2': FeatureTable[Frequency]
+        'tables': List[FeatureTable[Frequency]]
     },
     parameters={
         'metadata': Metadata, #can seaborn support numerical metadata?
-        'metadata_col': Str
+        'metadata_col': Str,
+        'palette': Str,
+        'style': Str,
+        'context': Str
     },
     input_descriptions={
-        'table1': 'Frequency feature table containing the samples to be compared.',
-        'table2': 'Frequency feature table containing the samples to be compared'
+        'tables': 'List of frequency feature table containing the samples to be compared.',
     },
     parameter_descriptions={
         'metadata': 'Sample metadata containing metadata_column which will be used to map color the plot.',
         'metadata_col': 'Sample metadata column to use to map color the plot.'
+        'palette': 'Palette to be chosen from seaborn color palette. Existing color palettes are available through seaborn website.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
     },
     name= 'Frequency count pairwise plot',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,
@@ -64,8 +68,7 @@ plugin.visualizers.register_function(
 plugin.visualizers.register_function(
     function=q2_comp.adiv_raincloud,
     inputs={
-        'table1': FeatureTable[Frequency],
-        'table2': FeatureTable[Frequency]
+        'tables': List[FeatureTable[Frequency]],
     },
     parameters={
         'metadata': Metadata,
@@ -75,8 +78,7 @@ plugin.visualizers.register_function(
         'context': Str
     },
     input_descriptions={
-        'table1': 'Frequency feature table containing the samples to be compared.',
-        'table2': 'Frequency feature table containing the samples to be compared'
+        'tables': 'List of frequency feature table containing the samples to be compared.',
     },
     parameter_descriptions={
         'metadata': 'Sample metadata',
@@ -93,16 +95,14 @@ plugin.visualizers.register_function(
 plugin.visualizers.register_function(
     function=q2_comp.adiv_raincloud_vector,
     inputs={
-        'alpha_diversity1': SampleData[AlphaDiversity],
-        'alpha_diversity2': SampleData[AlphaDiversity]
+        'alpha_diversity': List[SampleData[AlphaDiversity]],
     },
     parameters={
         'metadata': Metadata,
         'metadata_col': Str
     },
     input_descriptions={
-        'alpha_diversity1': 'Frequency feature table containing the samples to be compared.',
-        'alpha_diversity2': 'Frequency feature table containing the samples to be compared'
+        'alpha_diversity': 'List of frequency feature table containing the samples to be compared.',
     },
     parameter_descriptions={
         'metadata': 'Sample metadata',
