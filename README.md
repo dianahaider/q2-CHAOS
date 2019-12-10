@@ -3,15 +3,22 @@
 QIIME2 plugin for comparison of results <br>
 For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.
 
-## Getting started
+## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
 
-The first step in sequencing data analysis is the cleaning of the data.
-#all vis has option ot change palette style &context
+<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; &#129327; CHAOS both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
+<br>
+CHAOS conducts pairwise comparisons of alpha diversity or frequency tables, and comparisons of denoising statistics.
+<br>
+All visualizations can be tweaked by preferences for color palette, style and context.
+
+![tutorial_V1](https://github.com/dianahaider/q2-comp/blob/master/tutorial/tutorial_v1.png)
 
 
 ## Alpha
 
-This function xyz
+Feature tables of frequency or alpha diversity indices artifacts can be compared through three visualizations and one table. The pairwise plot shows the correlation between each pair of samples between each method, and the density plot of each method is displaned in the diagonale. The raincloud plot shows both the density plot and a box plot for each method.
+
+Cool trick: it can also produce simpler visualizations such as box plots or violin plots if that's your preference. All plots can be colored by categorical metadata colummns.
 
 ```
 qiime comp alpha-frequency \
@@ -28,7 +35,9 @@ qiime comp alpha-frequency \
   </ul>
 </p>
 
-Can also abc <p>&#128520;</p>
+
+
+
 
 ```
 qiime comp alpha-index \
@@ -63,9 +72,9 @@ qiime comp alpha-core \
   <li><span style="background-color:#00FEFE">visualization_merged.qzv</span> <a href="https://github.com/dianahaider/q2-comp/wiki">view</a> | <a href="https://github.com/dianahaider/q2-comp/wiki">download</a></li>
 </ul>
 
-### Denoise
+## Denoise
 
-This functions xyz
+This functions xyz Blblalblablalbalblabla
 
 ```
 qiime comp denoise \
