@@ -55,8 +55,8 @@ plugin.visualizers.register_function(
     },
     parameter_descriptions={
         'metadata': 'Sample metadata containing metadata_column which will be used to map color the plot.',
-        'metadata_col': 'Sample metadata column to use to map color the plot.'
-        'palette': 'Palette to be chosen from seaborn color palette. Existing color palettes are available through seaborn website.',
+        'metadata_col': 'Sample metadata column to use to map color the plot.',
+        'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
     },
