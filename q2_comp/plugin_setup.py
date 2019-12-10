@@ -47,7 +47,8 @@ plugin.visualizers.register_function(
         'metadata_column': Str,
         'palette': Str,
         'style': Str,
-        'context': Str
+        'context': Str,
+        'plot_type': Str
     },
     input_descriptions={
         'tables': 'List of frequency feature table containing the samples to be compared.',

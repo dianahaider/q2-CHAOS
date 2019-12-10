@@ -25,7 +25,9 @@ def alpha_frequency_compare(output_dir: str,
                 metadata: qiime2.Metadata,
                 palette: str = 'husl',
                 style: str = 'white',
-                context: str = 'paper') -> None:
+                context: str = 'paper',
+                plot_type: str = 'all') -> None:
+    for i in tables;
     number_of_features1, number_of_samples1 = table1.shape
     number_of_features2, number_of_samples2 = table2.shape
     sample_frequencies1 = _frequencies(
@@ -59,7 +61,7 @@ def alpha_frequency_compare(output_dir: str,
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()
 
-    index = os.path.join(TEMPLATES, 'pairwise_assets', 'index.html')
+    index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
 
 #    table_preview = metadata.to_html()
