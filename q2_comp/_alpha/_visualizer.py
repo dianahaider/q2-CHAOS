@@ -19,7 +19,7 @@ import skbio
 
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
-def alpha_frequency_compare(output_dir: str,
+def alpha_frequency(output_dir: str,
                 tables: biom.Table,
                 metadata_column: str,
                 metadata: qiime2.Metadata,
@@ -61,6 +61,11 @@ def alpha_frequency_compare(output_dir: str,
     #smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
     smpl_metadata = pd.merge(merged_tables,metadata, on = "sample-id")
 
+    table_preview = smpl_metadata.to_html()
+    with open('outfile.html', 'w') as file:
+        file.write(table_preview)
+
+
     sns.set_style(style)
     sns.set_context(context)
 
@@ -72,12 +77,10 @@ def alpha_frequency_compare(output_dir: str,
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
 
-#    table_preview = metadata.to_html()
-#    print(table_preview)
+
 
 def adiv_raincloud(output_dir: str,
-                table1: biom.Table,
-                table2: biom.Table,
+                tables: biom.Table,
                 metadata_col: str,
                 metadata: qiime2.Metadata,
                 palette: str = 'husl',
@@ -124,8 +127,7 @@ def adiv_raincloud(output_dir: str,
     q2templates.render(index, output_dir)
 
 def adiv_raincloud_vector(output_dir: str,
-                alpha_diversity1: pd.Series,
-                alpha_diversity2: pd.Series,
+                alpha_diversity: pd.Series,
                 metadata_col: str,
                 metadata: qiime2.Metadata) -> None:
 

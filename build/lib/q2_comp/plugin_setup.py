@@ -6,11 +6,11 @@ import versioneer
 
 #import my functions
 import q2_comp
-from q2_comp import _adiv as adiv
-from q2_comp import _betadiv as betadiv
+from q2_comp import _alpha as alpha
+from q2_comp import _beta as beta
 from q2_comp import _denoise as denoise
-from q2_comp import _ml as ml
-from q2_comp import _taxo as taxo
+from q2_comp import _machinelearning as machinelearning
+from q2_comp import _taxonomy as taxonomy
 
 
 #import types
@@ -38,7 +38,7 @@ plugin = Plugin (
 #first function: pairwise comparison of either a diversity index (shannon) or feature table
 #maybe combine fun1 and fun2 and add an input 'method: str = {pairwise, raincloud}'
 plugin.visualizers.register_function(
-    function=q2_comp.alpha_frequency_compare,
+    function=q2_comp.alpha_frequency,
     inputs={
         'tables': List[FeatureTable[Frequency]]
     },
@@ -55,7 +55,7 @@ plugin.visualizers.register_function(
     },
     parameter_descriptions={
         'metadata': 'Sample metadata containing metadata_column which will be used to map color the plot.',
-        'metadata_col': 'Sample metadata column to use to map color the plot.',
+        'metadata_column': 'Sample metadata column to use to map color the plot.',
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'

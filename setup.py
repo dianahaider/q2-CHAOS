@@ -18,16 +18,15 @@ setup(
     },
     zip_safe=False,
     #include non .py files such as txt html bib
-    package_data={ 'q2_comp._adiv': [
-                        'pairwise_assets/index.html',
+    package_data={ 'q2_comp._alpha': [
+                        'frequency_assets/index.html',
                         'raincloud_assets/index.html',
                         'rainclouda_assets/index.html',
                     ],
                     'q2_comp': ['citations.bib'],
                     'q2_comp._denoise': [
                         'denoise_assets/index.html'
-                    ],
-                    'q2_comp.tutorial'
+                    ]
                     },
 
 )
