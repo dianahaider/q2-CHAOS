@@ -28,6 +28,23 @@ def alpha_frequency(output_dir: str,
                 context: str = 'paper',
                 plot_type: str = 'all') -> None:
 
+    for i in range(len(tables)-1):
+        #first 2 tables
+        sample_frequencies1 = _frequencies(tables[i], axis='sample')
+        sample_frequencies2 = _frequencies(tables[i+1], axis='sample')
+        sample_frequencies1.sort_values(inplace=True, ascending=False)
+        sample_frequencies2.sort_values(inplace=True, ascending=False)
+        sample_frequencies_df1 = sample_frequencies.to_frame()
+        sample_frequencies_df2 = sample_frequencies.to_frame()
+        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = 'sample')
+
+        sample_frequencies = _frequencies(tables[i+2], axis='sample')
+        sample_frequencies.sort_values(inplace=True, ascending=False)
+        sample_frequencies_df = sample_frequencies.to_frame()
+        merged = pd.merge(merged, sample_frequencies_df, on = 'sample')
+
+
+"""
     merged_tables = []
 
     for i in range(len(tables)):
@@ -44,11 +61,13 @@ def alpha_frequency(output_dir: str,
     #            os.path.join(output_dir, 'sample-frequency-detail2.csv'))
         sample_frequencies_df = sample_frequencies.to_frame()
     #sample_frequencies_df2 = sample_frequencies2.to_frame()
-        sample_frequencies_df.index.name = "sample-id"
-        sample_frequencies_df.reset_index(inplace = True)
+        sample_frequencies_df = sample_frequencies.to_frame()
+        sample_frequencies_df = sample_frequencies.to_frame()
+        sample_frequencies_df['id'] = i
         merged_tables.append(sample_frequencies_df)
 
     merged_tables = pd.concat(merged_tables, sort = True)
+"""
 
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
@@ -69,7 +88,7 @@ def alpha_frequency(output_dir: str,
     sns.set_style(style)
     sns.set_context(context)
 
-    niceplot = sns.pairplot(smpl_metadata, hue = metadata_col, vars = ['Table 1','Table 2'], palette = palette)
+    niceplot = sns.pairplot(smpl_metadata, hue = 'id', vars = ['0'], palette = palette)
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()

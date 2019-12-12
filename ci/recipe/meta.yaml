@@ -2,7 +2,7 @@
 {% set version = data.get('version') or 'placehold' %}
 
 package:
-  name: q2_comp
+  name: q2-comp
   version: {{ version }}
 
 source:
@@ -27,6 +27,7 @@ requirements:
     - q2-types {{ release }}.*
     - q2-feature-table {{ release }}.*
     - q2-metadata {{ release }}.*
+    - ptitprince
 
 test:
   imports:
@@ -34,6 +35,6 @@ test:
     - qiime2.plugins.comp
 
 about:
-  home: https://qiime2.org
+  home: https://github.com/dianahaider/q2-comp
   license: BSD-3-Clause
   license_family: BSD
