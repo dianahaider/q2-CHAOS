@@ -84,29 +84,29 @@ def alpha_frequency(output_dir: str,
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
     metadata.reset_index(inplace = True)
-    #sample_frequencies_df1.index.name = "sample-id"
-    #sample_frequencies_df1.reset_index(inplace=True)
-    #sample_frequencies_df2.index.name = "sample-id"
-    #sample_frequencies_df2.reset_index(inplace=True)
-    #smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
-    #smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    smpl_metadata = pd.merge(merged,metadata, on = "sample-id")
+    merged_metadata = pd.merge(merged,metadata, on = "sample-id")
 
-    table_preview = smpl_metadata.to_html()
-    with open('smpl_metadata.html', 'w') as file:
-        file.write(table_preview)
-
+    melted_merged_raincloud = pd.melt(merged, id_vars = 'sample-id')
+    melted_merged_raincloud_metadata = pd.merge(melted_merged_raincloud, metadata, on = "sample-id")
+    melted_merged_raincloud_metadata = melted_merged_raincloud_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
     sns.set_style(style)
     sns.set_context(context)
 
-    niceplot = sns.pairplot(smpl_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette, kind="reg")
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
-    niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
+    pairplot_frequency = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
+    pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
+    pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
+    plt.gcf().clear()
+
+    raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_raincloud_metadata,
+                orient = 'h', hue = metadata_column, alpha = 0.65, palette = (sns.set_palette(palette)) )
+    raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+    raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
+
 
 
 
