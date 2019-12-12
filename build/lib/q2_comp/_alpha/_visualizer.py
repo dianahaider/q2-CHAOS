@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import ptitprince as pt
 import biom
 import skbio
+import sys
 
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
@@ -26,48 +27,59 @@ def alpha_frequency(output_dir: str,
                 palette: str = 'husl',
                 style: str = 'white',
                 context: str = 'paper',
-                plot_type: str = 'all') -> None:
+                plot_type: str = 'all',
+                labels : str = None) -> None:
 
-    for i in range(len(tables)-1):
-        #first 2 tables
-        sample_frequencies1 = _frequencies(tables[i], axis='sample')
-        sample_frequencies2 = _frequencies(tables[i+1], axis='sample')
-        sample_frequencies1.sort_values(inplace=True, ascending=False)
-        sample_frequencies2.sort_values(inplace=True, ascending=False)
-        sample_frequencies_df1 = sample_frequencies.to_frame()
-        sample_frequencies_df2 = sample_frequencies.to_frame()
-        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = 'sample')
+#first 2 tables
 
-        sample_frequencies = _frequencies(tables[i+2], axis='sample')
-        sample_frequencies.sort_values(inplace=True, ascending=False)
-        sample_frequencies_df = sample_frequencies.to_frame()
-        merged = pd.merge(merged, sample_frequencies_df, on = 'sample')
+    sample_frequencies1 = _frequencies(tables[0], axis='sample')
+    sample_frequencies2 = _frequencies(tables[1], axis='sample')
+    sample_frequencies1.sort_values(inplace=True, ascending=False)
+    sample_frequencies2.sort_values(inplace=True, ascending=False)
+    sample_frequencies_df1 = sample_frequencies1.to_frame()
+    sample_frequencies_df2 = sample_frequencies2.to_frame()
+    sample_frequencies_df1.index.name = "sample-id"
+    sample_frequencies_df1.reset_index(inplace=True)
+    sample_frequencies_df2.index.name = "sample-id"
+    sample_frequencies_df2.reset_index(inplace=True)
 
+#if no labels are given, label the inputs as numbers
+    if not labels:
 
-"""
-    merged_tables = []
+        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+        merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
 
-    for i in range(len(tables)):
-    #number_of_features1, number_of_samples1 = table1.shape
-    #number_of_features2, number_of_samples2 = table2.shape
-        sample_frequencies = _frequencies(tables[i], axis = 'sample')
-        sample_frequencies.sort_values(inplace=True, ascending=False)
-    #sample_frequencies.to_csv(
-    #            os.path.join(output_dir, 'sample-frequency-detail1.csv'))
-    #sample_frequencies2 = _frequencies(
-    #    table2, axis = 'sample')
-    #sample_frequencies2.sort_values(inplace=True, ascending=False)
-    #sample_frequencies2.to_csv(
-    #            os.path.join(output_dir, 'sample-frequency-detail2.csv'))
-        sample_frequencies_df = sample_frequencies.to_frame()
-    #sample_frequencies_df2 = sample_frequencies2.to_frame()
-        sample_frequencies_df = sample_frequencies.to_frame()
-        sample_frequencies_df = sample_frequencies.to_frame()
-        sample_frequencies_df['id'] = i
-        merged_tables.append(sample_frequencies_df)
+        if len(tables)>2:
+            for i in range((len(tables))-2) :
+                sample_frequencies = _frequencies(tables[i+2], axis='sample')
+                sample_frequencies.sort_values(inplace=True, ascending=False)
+                sample_frequencies_df = sample_frequencies.to_frame()
+                sample_frequencies_df.index.name = "sample-id"
+                sample_frequencies_df.reset_index(inplace=True)
+                merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
+                merged = merged.rename(columns = {0:(i+3)})
+            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+        table_preview = merged.to_html()
+        with open('merged', 'w') as file:
+            file.write(table_preview)
 
-    merged_tables = pd.concat(merged_tables, sort = True)
-"""
+    else:
+        if len(labels) != len(tables):
+            raise ValueError("The number of labels is different than the number of tables")
+        sample_frequencies_df1.rename(columns = {"0":labels[0]})
+        sample_frequencies_df2.rename(columns = {"0":labels[1]})
+
+        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+
+        if len(tables)>2:
+            for i in range((len(tables))-2) :
+                sample_frequencies = _frequencies(tables[i+2], axis='sample')
+                sample_frequencies.sort_values(inplace=True, ascending=False)
+                sample_frequencies_df = sample_frequencies.to_frame()
+                sample_frequencies_df.index.name = "sample-id"
+                sample_frequencies_df.reset_index(inplace=True)
+                sample_frequencies_df.rename(columns = {"0":labels[i+2]})
+                merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
 
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
@@ -78,17 +90,17 @@ def alpha_frequency(output_dir: str,
     #sample_frequencies_df2.reset_index(inplace=True)
     #smpl = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
     #smpl = smpl.rename(columns = {'0_x':'Table 1', '0_y':'Table 2'})
-    smpl_metadata = pd.merge(merged_tables,metadata, on = "sample-id")
+    smpl_metadata = pd.merge(merged,metadata, on = "sample-id")
 
     table_preview = smpl_metadata.to_html()
-    with open('outfile.html', 'w') as file:
+    with open('smpl_metadata.html', 'w') as file:
         file.write(table_preview)
 
 
     sns.set_style(style)
     sns.set_context(context)
 
-    niceplot = sns.pairplot(smpl_metadata, hue = 'id', vars = ['0'], palette = palette)
+    niceplot = sns.pairplot(smpl_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
     niceplot.savefig(os.path.join(output_dir, 'pleasework.png'))
     niceplot.savefig(os.path.join(output_dir, 'pleasework.pdf'))
     plt.gcf().clear()

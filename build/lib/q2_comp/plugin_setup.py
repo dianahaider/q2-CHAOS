@@ -48,7 +48,8 @@ plugin.visualizers.register_function(
         'palette': Str,
         'style': Str,
         'context': Str,
-        'plot_type': Str
+        'plot_type': Str,
+        'labels': List[Str]
     },
     input_descriptions={
         'tables': 'List of frequency feature table containing the samples to be compared.',
@@ -58,7 +59,8 @@ plugin.visualizers.register_function(
         'metadata_column': 'Sample metadata column to use to map color the plot.',
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
-        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
     },
     name= 'Frequency count pairwise plot',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,
