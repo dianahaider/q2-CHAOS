@@ -48,6 +48,8 @@ def alpha_frequency(output_dir: str,
 
         merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
         merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
+        vars_to_plot = ['1','2']
+
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -59,15 +61,13 @@ def alpha_frequency(output_dir: str,
                 merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
                 merged = merged.rename(columns = {0:(i+3)})
             vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
-        table_preview = merged.to_html()
-        with open('merged', 'w') as file:
-            file.write(table_preview)
 
     else:
         if len(labels) != len(tables):
             raise ValueError("The number of labels is different than the number of tables")
         sample_frequencies_df1.rename(columns = {"0":labels[0]})
         sample_frequencies_df2.rename(columns = {"0":labels[1]})
+        vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
         merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
 
@@ -80,15 +80,17 @@ def alpha_frequency(output_dir: str,
                 sample_frequencies_df.reset_index(inplace=True)
                 sample_frequencies_df.rename(columns = {"0":labels[i+2]})
                 merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
+            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+
 
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
     metadata.reset_index(inplace = True)
     merged_metadata = pd.merge(merged,metadata, on = "sample-id")
 
-    melted_merged_raincloud = pd.melt(merged, id_vars = 'sample-id')
-    melted_merged_raincloud_metadata = pd.merge(melted_merged_raincloud, metadata, on = "sample-id")
-    melted_merged_raincloud_metadata = melted_merged_raincloud_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
+    melted_merged = pd.melt(merged, id_vars = 'sample-id')
+    melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
+    melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
     sns.set_style(style)
     sns.set_context(context)
@@ -98,15 +100,19 @@ def alpha_frequency(output_dir: str,
     pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
     plt.gcf().clear()
 
-    raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_raincloud_metadata,
+    raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
                 orient = 'h', hue = metadata_column, alpha = 0.65, palette = (sns.set_palette(palette)) )
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
+    boxplot = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette)
+    boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
+    boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
-
 
 
 

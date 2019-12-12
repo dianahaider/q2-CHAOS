@@ -5,9 +5,9 @@
 
 {% block content %}
   <h1>Exploratory visualizations and statistics for the comparison of feature tables</h1>
-  <h1>Comparison of feature tables</h1>
+  <h3>Pairwise comparison of feature tables</h3>
     <div class="col-lg-12">
-      <img src="pairplot_frequency.png" width="500" height="500" class="center-block">
+      <img src="pairplot_frequency.png" class="center-block">
       <a href="pairplot_frequency.pdf">
         <br>
         <p class="text-center">Download as PDF</p>
@@ -18,7 +18,7 @@
       </a>
     </div>
 
-  <h1>Comparison of feature tables</h1>
+  <h3>Raincloud plot of feature tables</h3>
 
     <div class="col-lg-12">
       <img src="raincloud.png" class="center-block">
@@ -31,5 +31,19 @@
         <p class="text-center">Download as PNG</p>
       </a>
     </div>
+
+    <h3>Boxplot of feature tables</h3>
+
+      <div class="col-lg-12">
+        <img src="boxplot.png" class="center-block">
+        <a href="boxplot.pdf">
+          <br>
+          <p class="text-center">Download as PDF</p>
+        </a>
+        <a href="boxplot.png">
+          <br>
+          <p class="text-center">Download as PNG</p>
+        </a>
+      </div>
 
 {% endblock %}
