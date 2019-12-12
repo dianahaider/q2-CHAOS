@@ -1,7 +1,16 @@
 # q2-CHAOS
 
 QIIME2 plugin for comparison of artifacts <br>
-For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.
+For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.<br>
+To install from conda,
+```
+conda install -c dianahaider/q2-comp
+```
+
+To install from this repository, clone the repos in your computer then ```cd``` to the main directory q2-comp
+```
+python setup.py install
+```
 
 ## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
 
