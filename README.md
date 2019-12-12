@@ -2,6 +2,8 @@
 
 QIIME2 plugin for comparison of artifacts <br>
 For descriptions on how to install and run this plugin, see  <a href="https://github.com/dianahaider/q2-comp/wiki">here</a>.<br>
+<br>
+### Install
 To install from conda,
 ```
 conda install -c dianahaider/q2-comp
