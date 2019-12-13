@@ -19,7 +19,7 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 def plot_types():
     return {'line', 'bar'}
-
+"""
 def denoise_vis(output_dir: str,
                 stats1: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 stats2: qiime2.Metadata,
@@ -72,12 +72,12 @@ def denoise_vis(output_dir: str,
     with open('outfile.html', 'w') as file:
         file.write(table_preview)
 
-"""
 default_labels_for_denoise_list = []
 for i in range(1,100):
     i = str(i)
     default_labels_for_denoise_list.append(i)
 """
+
 def denoise_list(output_dir: str,
                 input_stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 labels: str = None,
@@ -103,6 +103,7 @@ def denoise_list(output_dir: str,
 
     df = pd.concat(df, sort = True)
 
+# find way to fix if missing step; not being 0 but instead just skip the column
     df = df.groupby('id').sum()
     new_df = pd.melt(df.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_num = new_df['read_number'].max() #to normalize your data with input (input is the highest read_number)
