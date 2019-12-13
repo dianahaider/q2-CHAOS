@@ -22,8 +22,8 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
 def alpha_frequency(output_dir: str,
                 tables: biom.Table,
-                metadata_column: str,
-                metadata: qiime2.Metadata,
+                metadata_column: str = None,
+                metadata: qiime2.Metadata = None,
                 palette: str = 'husl',
                 style: str = 'white',
                 context: str = 'paper',
@@ -100,20 +100,25 @@ def alpha_frequency(output_dir: str,
     pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
     plt.gcf().clear()
 
+    sns.set_style(style)
+    sns.set_context(context)
+
     raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
-                orient = 'h', hue = metadata_column, alpha = 0.65, palette = (sns.set_palette(palette)) )
+                orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
-    boxplot = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette)
+    sns.set_style(style)
+    sns.set_context(context)
+
+    boxplot = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
     boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
     boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
-
 
 
 def adiv_raincloud(output_dir: str,
