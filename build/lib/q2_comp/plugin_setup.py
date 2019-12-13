@@ -208,7 +208,7 @@ plugin.visualizers.register_function(
 
 )
 """
-
+"""
 #function5: denoise bar diagram take as input stats from qiime2 can only do dada2 for now!
 plugin.visualizers.register_function(
     function=q2_comp.denoise_vis,
@@ -238,7 +238,7 @@ plugin.visualizers.register_function(
     name= 'Denoising statistics comparison',
     description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
 )
-
+"""
 plugin.visualizers.register_function(
     function=q2_comp.denoise_list,
     inputs={
