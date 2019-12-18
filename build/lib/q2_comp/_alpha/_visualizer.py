@@ -43,6 +43,9 @@ def alpha_frequency(output_dir: str,
     sample_frequencies_df2.index.name = "sample-id"
     sample_frequencies_df2.reset_index(inplace=True)
 
+    #if not metadata & labels:
+    #    raise ValueError("Metadata file was not provided")
+
 #if no labels are given, label the inputs as numbers
     if not labels:
 
@@ -82,29 +85,42 @@ def alpha_frequency(output_dir: str,
                 merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
             vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
-
-    metadata = metadata.to_dataframe()
-    metadata.index.name = "sample-id"
-    metadata.reset_index(inplace = True)
-    merged_metadata = pd.merge(merged,metadata, on = "sample-id")
-
     melted_merged = pd.melt(merged, id_vars = 'sample-id')
-    melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
-    melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
+
+
+    if not metadata:
+
+        pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
+
+        raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
+                    orient = 'h', alpha = 0.65, palette = palette )
+
+        boxplot = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
+
+    else:
+
+        metadata = metadata.to_dataframe()
+        metadata.index.name = "sample-id"
+        metadata.reset_index(inplace = True)
+        merged_metadata = pd.merge(merged,metadata, on = "sample-id")
+
+        melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
+        melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
+
+        pairplot_frequency = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
+
+        raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
+                    orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
+
+        boxplot = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
 
     sns.set_style(style)
     sns.set_context(context)
 
-    pairplot_frequency = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
     pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
     pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
     plt.gcf().clear()
 
-    sns.set_style(style)
-    sns.set_context(context)
-
-    raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
-                orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
     raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
