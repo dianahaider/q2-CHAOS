@@ -70,9 +70,9 @@ def alpha_frequency(output_dir: str,
             raise ValueError("The number of labels is different than the number of tables")
         sample_frequencies_df1.rename(columns = {"0":labels[0]})
         sample_frequencies_df2.rename(columns = {"0":labels[1]})
-        vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
         merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+        vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -90,12 +90,28 @@ def alpha_frequency(output_dir: str,
 
     if not metadata:
 
+        melted_merged = pd.melt(merged, id_vars = 'sample-id')
+        melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
+
         pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
 
-        raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
-                    orient = 'h', alpha = 0.65, palette = palette )
+        sns.set_style(style)
+        sns.set_context(context)
 
-        boxplot = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
+        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
+        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
+        plt.gcf().clear()
+
+        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
+                    orient = 'h', alpha = 0.65, palette = palette )
+        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
+
+        boxplot_frequency = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
+        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
+        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
 
     else:
 
@@ -107,30 +123,26 @@ def alpha_frequency(output_dir: str,
         melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
         melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
+        sns.set_style(style)
+        sns.set_context(context)
+
         pairplot_frequency = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
 
-        raincloud_plot = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
+        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
+        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
+        plt.gcf().clear()
+
+        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
                     orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
+        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
 
-        boxplot = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
+        boxplot_frequency = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
+        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
+        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
 
-    sns.set_style(style)
-    sns.set_context(context)
-
-    pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
-    pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
-    plt.gcf().clear()
-
-    raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
-    raincloud_plot.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
-    plt.gcf().clear()
-
-    sns.set_style(style)
-    sns.set_context(context)
-
-    boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
-    boxplot.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
-    plt.gcf().clear()
 
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
     q2templates.render(index, output_dir)
