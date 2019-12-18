@@ -16,9 +16,8 @@ q2_comp.egg-info/not-zip-safe
 q2_comp.egg-info/top_level.txt
 q2_comp/_alpha/__init__.py
 q2_comp/_alpha/_visualizer.py
+q2_comp/_alpha/diversity_assets/index.html
 q2_comp/_alpha/frequency_assets/index.html
-q2_comp/_alpha/raincloud_assets/index.html
-q2_comp/_alpha/rainclouda_assets/index.html
 q2_comp/_beta/__init__.py
 q2_comp/_beta/_visualizer.py
 q2_comp/_denoise/__init__.py
