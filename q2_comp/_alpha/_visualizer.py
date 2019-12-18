@@ -68,10 +68,9 @@ def alpha_frequency(output_dir: str,
     else:
         if len(labels) != len(tables):
             raise ValueError("The number of labels is different than the number of tables")
-        sample_frequencies_df1.rename(columns = {"0":labels[0]})
-        sample_frequencies_df2.rename(columns = {"0":labels[1]})
 
         merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
+        merged = merged.rename(columns = {'0_x':labels[0], '0_y':labels[1]})
         vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
         if len(tables)>2:
@@ -81,8 +80,8 @@ def alpha_frequency(output_dir: str,
                 sample_frequencies_df = sample_frequencies.to_frame()
                 sample_frequencies_df.index.name = "sample-id"
                 sample_frequencies_df.reset_index(inplace=True)
-                sample_frequencies_df.rename(columns = {"0":labels[i+2]})
                 merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
+                merged = merged.rename(columns = {0:labels[i+2]})
             vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
     melted_merged = pd.melt(merged, id_vars = 'sample-id')
