@@ -37,6 +37,9 @@ plugin = Plugin (
 #register the functions
 #first function: pairwise comparison of either a diversity index (shannon) or feature table
 #maybe combine fun1 and fun2 and add an input 'method: str = {pairwise, raincloud}'
+
+_PLOT_OPT = {'pairwise', 'raincloud', 'violin', 'all'}
+
 plugin.visualizers.register_function(
     function=q2_comp.alpha_frequency,
     inputs={
@@ -48,7 +51,7 @@ plugin.visualizers.register_function(
         'palette': Str,
         'style': Str,
         'context': Str,
-        'plot_type': Str,
+        'plot_type': Str % Choices(_PLOT_OPT),
         'labels': List[Str]
     },
     input_descriptions={
@@ -60,7 +63,8 @@ plugin.visualizers.register_function(
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
-        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.',
+        'plot_type': 'Type of plot to visualize data. If nothing is provided, all plots will be shown.'
     },
     name= 'Frequency count pairwise plot',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,

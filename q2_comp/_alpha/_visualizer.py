@@ -92,10 +92,10 @@ def alpha_frequency(output_dir: str,
         melted_merged = pd.melt(merged, id_vars = 'sample-id')
         melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
-        pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
-
         sns.set_style(style)
         sns.set_context(context)
+        
+        pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
 
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
