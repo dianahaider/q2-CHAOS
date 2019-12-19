@@ -27,7 +27,7 @@ def alpha_frequency(output_dir: str,
                 palette: str = 'husl',
                 style: str = 'white',
                 context: str = 'paper',
-                plot_type: str = 'all',
+#                plot_type: str = 'all',
                 labels : str = None) -> None:
 
 #first 2 tables
@@ -94,7 +94,7 @@ def alpha_frequency(output_dir: str,
 
         sns.set_style(style)
         sns.set_context(context)
-        
+
         pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
 
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
