@@ -14,6 +14,7 @@ import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
 import ptitprince as pt
+import scipy.stats
 import biom
 import skbio
 import sys
@@ -113,6 +114,8 @@ def alpha_frequency(output_dir: str,
         plt.gcf().clear()
 
     else:
+        if not metadata_column:
+            raise ValueError("Metadata column not provided")
 
         metadata = metadata.to_dataframe()
         metadata.index.name = "sample-id"
@@ -141,6 +144,11 @@ def alpha_frequency(output_dir: str,
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
+
+#    for i in range(len(merged.columns)-1):
+#        col =
+
+
 
 
     index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
