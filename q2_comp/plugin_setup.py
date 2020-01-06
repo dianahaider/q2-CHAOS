@@ -37,6 +37,9 @@ plugin = Plugin (
 #register the functions
 #first function: pairwise comparison of either a diversity index (shannon) or feature table
 #maybe combine fun1 and fun2 and add an input 'method: str = {pairwise, raincloud}'
+
+_PLOT_OPT = {'pairwise', 'raincloud', 'violin', 'all'}
+
 plugin.visualizers.register_function(
     function=q2_comp.alpha_frequency,
     inputs={
@@ -48,7 +51,7 @@ plugin.visualizers.register_function(
         'palette': Str,
         'style': Str,
         'context': Str,
-        'plot_type': Str,
+#        'plot_type': Str % Choices(_PLOT_OPT),
         'labels': List[Str]
     },
     input_descriptions={
@@ -60,7 +63,8 @@ plugin.visualizers.register_function(
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
-        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.',
+    #    'plot_type': 'Type of plot to visualize data. If nothing is provided, all plots will be shown.'
     },
     name= 'Frequency count pairwise plot',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,
@@ -68,35 +72,10 @@ plugin.visualizers.register_function(
 )
 #maybe can add parameters for labels
 #second function: raincloud plot for a diversity or feature table (both boxplot and density plot)
-plugin.visualizers.register_function(
-    function=q2_comp.adiv_raincloud,
-    inputs={
-        'tables': List[FeatureTable[Frequency]],
-    },
-    parameters={
-        'metadata': Metadata,
-        'metadata_col': Str,
-        'palette': Str,
-        'style': Str,
-        'context': Str
-    },
-    input_descriptions={
-        'tables': 'List of frequency feature table containing the samples to be compared.',
-    },
-    parameter_descriptions={
-        'metadata': 'Sample metadata',
-        'metadata_col': 'Categorical metadata column to map plot to different colors.',
-        'palette': 'Palette to be chosen from seaborn color palette. Existing color palettes are available through seaborn website.',
-        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
-        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
-    },
-    name='Frequency count boxplot',
-    description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
-)
 
 #test function here for a_div vectors
 plugin.visualizers.register_function(
-    function=q2_comp.adiv_raincloud_vector,
+    function=q2_comp.alpha_diversity,
     inputs={
         'alpha_diversity': List[SampleData[AlphaDiversity]],
     },
@@ -208,37 +187,8 @@ plugin.visualizers.register_function(
 
 )
 """
-"""
 #function5: denoise bar diagram take as input stats from qiime2 can only do dada2 for now!
-plugin.visualizers.register_function(
-    function=q2_comp.denoise_vis,
-    inputs={
-        'stats1': SampleData[DADA2Stats],
-        'stats2': SampleData[DADA2Stats],
-    },
-    parameters={
-        'plot_type': Str % Choices (['line', 'bar']),
-        'label1' : Str, #add default stats1, stats2, etc.
-        'label2' : Str,
-        'style' : Str,
-        'context' : Str
-    },
-    #no metadata here! UNLESS think of complex figure able to show per md categorical column
-    input_descriptions={
-        'stats1': 'Denoising statistics from DADA2.',
-        'stats2': 'Denoising statistics from DADA2.'
-    },
-    parameter_descriptions={
-        'plot_type': 'Type of plot visualization.',
-        'label1': 'Label for stats1 in the visualization.',
-        'label2': 'Label for stats2 in the visualization.',
-        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
-        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.'
-    },
-    name= 'Denoising statistics comparison',
-    description= "Visually compare the denoising statistics from DADA2 using two different sets of parameters to assess which denoising steps are more stringent.",
-)
-"""
+
 plugin.visualizers.register_function(
     function=q2_comp.denoise_list,
     inputs={
