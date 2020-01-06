@@ -19,6 +19,7 @@ import biom
 import skbio
 import sys
 
+
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
 def alpha_frequency(output_dir: str,
@@ -44,6 +45,7 @@ def alpha_frequency(output_dir: str,
     sample_frequencies_df2.index.name = "sample-id"
     sample_frequencies_df2.reset_index(inplace=True)
 
+
     #if not metadata & labels:
     #    raise ValueError("Metadata file was not provided")
 
@@ -54,6 +56,8 @@ def alpha_frequency(output_dir: str,
         merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
         vars_to_plot = ['1','2']
 
+        if verbose:
+            print('Labeling columns')
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -73,6 +77,9 @@ def alpha_frequency(output_dir: str,
         merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
         merged = merged.rename(columns = {'0_x':labels[0], '0_y':labels[1]})
         vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+
+        if verbose:
+            print('Labeling columns')
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -102,16 +109,25 @@ def alpha_frequency(output_dir: str,
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
         plt.gcf().clear()
 
+        if verbose:
+            print('Plotting pairplot')
+
         raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
                     orient = 'h', alpha = 0.65, palette = palette )
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
+        if verbose:
+            print('Plotting raincloud')
+
         boxplot_frequency = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
+
+        if verbose:
+            print('Plotting boxplot')
 
     else:
         if not metadata_column:
@@ -125,6 +141,9 @@ def alpha_frequency(output_dir: str,
         melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
         melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
+        if verbose:
+            print('Merging metadata')
+
         sns.set_style(style)
         sns.set_context(context)
 
@@ -134,16 +153,25 @@ def alpha_frequency(output_dir: str,
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
         plt.gcf().clear()
 
+        if verbose:
+            print('Plotting pairplot')
+
         raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
                     orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
+        if verbose:
+            print('Plotting raincloud')
+
         boxplot_frequency = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
+
+        if verbose:
+            print('Plotting boxplot')
 
 #    for i in range(len(merged.columns)-1):
 #        col =
