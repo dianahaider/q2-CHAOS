@@ -1,2 +1,6 @@
 .ipynb_checkpoints
 git_cheatsheet.txt
+build
+dist
+__pycache__
+q2_comp.egg-info

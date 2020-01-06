@@ -1,3 +1,0 @@
-[qiime2.plugins]
-q2_comp = q2_comp.plugin_setup:plugin
-
