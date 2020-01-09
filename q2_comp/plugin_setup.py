@@ -14,6 +14,7 @@ from q2_comp import _taxonomy as taxonomy
 
 
 #import types
+from q2_types.feature_data import FeatureData, Taxonomy, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.distance_matrix import DistanceMatrix
 from q2_types.sample_data import AlphaDiversity, SampleData
@@ -250,33 +251,39 @@ plugin.visualizers.register_function(
     citations=[]
 
 )
-
+"""
 #function7: taxonomic comparison (how well does it assign taxonomy from these repseqs)
 #sklearn classifier or VSEARCH or naivebayes
 plugin.visualizers.register_function(
-    function=q2_comp.comp_taxo,
+    function=q2_comp.taxo_variability,
     inputs={
-        'taxo1': something,
-        'taxo2': something something
+        'taxonomy': List[FeatureData[Taxonomy]],
+        'tables': List[FeatureTable[Frequency]]
     },
-    outputs=[
-        ('barplot', Visualization)
-    ],
-    input_description={
-        'taxo1': 'Taxonomic classification from one feature table',
-        'taxo2': 'Taxonomic classification from a different feature table'
+    parameters={
+        'metadata' : Metadata,
+        'metadata_column' : Str,
+        'palette' : Str,
+        'style' : Str,
+        'context' : Str,
+        'labels' : List[Str]
     },
-    parameter_description={
-        'metadata': 'Categorical metadata column to map plot to different colors.'
+    input_descriptions={
+        'taxonomy': 'List of taxonomic classifications from one feature table',
+        'tables': 'Respective frequency tables for the classifications'
     },
-    name={
-        'Taxonomic classification comparison'
+    parameter_descriptions={
+        'metadata': 'Categorical metadata column to map plot to different colors.',
+        'metadata_column': '',
+        'palette': 'Palette to be chosen from seaborn color palette.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
     },
-    description={
+    name=
+        'Taxonomic assignment comparison',
+    description=
         'Visually compare the assignment of taxonomy from the same dataset using'
-        'two different clustering methods.'
-    },
-    citations=[]
-
+        'either different clustering methods, or different reference datasets for'
+        'classification.'
 )
-"""

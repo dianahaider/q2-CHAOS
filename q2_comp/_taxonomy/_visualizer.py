@@ -7,22 +7,25 @@ import qiime2
 import q2templates
 
 from q2_types.feature_table import FeatureTable, Frequency
+from q2_types.feature_data import FeatureData, Taxonomy, Sequence
 
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import scipy.spatial.distance import pdist, squareform
+import scipy.stats
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.pylab import *
+import matplotlib.pylab
 import ptitprince as pt
-import scipy.stats
+from scipy.spatial.distance import pdist, squareform
+
 
 
 TEMPLATES = pkg_resources.resource_filename('q2_comp', '_alpha')
 
-def alpha_frequency(output_dir: str,
-                tables: biom.Table,
+def taxo_variability(output_dir: str,
+                taxonomy: pd.Series,
+                tables: pd.DataFrame,
                 metadata_column: str = None,
                 metadata: qiime2.Metadata = None,
                 palette: str = 'husl',
