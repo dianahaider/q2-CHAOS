@@ -56,8 +56,8 @@ def alpha_frequency(output_dir: str,
         merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
         vars_to_plot = ['1','2']
 
-        if verbose:
-            print('Labeling columns')
+#if verbose
+        print('Labeling columns')
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -78,8 +78,8 @@ def alpha_frequency(output_dir: str,
         merged = merged.rename(columns = {'0_x':labels[0], '0_y':labels[1]})
         vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
 
-        if verbose:
-            print('Labeling columns')
+#        if verbose:
+        print('Labeling columns')
 
         if len(tables)>2:
             for i in range((len(tables))-2) :
@@ -100,6 +100,15 @@ def alpha_frequency(output_dir: str,
         melted_merged = pd.melt(merged, id_vars = 'sample-id')
         melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
+    table_preview = melted_merged.to_html()
+    with open('melted_merged.html', 'w') as file:
+        file.write(table_preview)
+
+    table_preview2 = merged.to_html()
+    with open('merged.html', 'w') as file:
+        file.write(table_preview2)
+
+
         sns.set_style(style)
         sns.set_context(context)
 
@@ -109,8 +118,8 @@ def alpha_frequency(output_dir: str,
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting pairplot')
+#        if verbose:
+        print('Plotting pairplot')
 
         raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
                     orient = 'h', alpha = 0.65, palette = palette )
@@ -118,16 +127,16 @@ def alpha_frequency(output_dir: str,
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting raincloud')
+#        if verbose:
+        print('Plotting raincloud')
 
         boxplot_frequency = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting boxplot')
+#        if verbose:
+        print('Plotting boxplot')
 
     else:
         if not metadata_column:
@@ -141,8 +150,8 @@ def alpha_frequency(output_dir: str,
         melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
         melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
-        if verbose:
-            print('Merging metadata')
+#        if verbose:
+        print('Merging metadata')
 
         sns.set_style(style)
         sns.set_context(context)
@@ -153,8 +162,8 @@ def alpha_frequency(output_dir: str,
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting pairplot')
+#        if verbose:
+        print('Plotting pairplot')
 
         raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
                     orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
@@ -162,17 +171,18 @@ def alpha_frequency(output_dir: str,
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting raincloud')
+#        if verbose:
+        print('Plotting raincloud')
 
         boxplot_frequency = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-        if verbose:
-            print('Plotting boxplot')
+#        if verbose:
+        print('Plotting boxplot')
 
+#    melted_merged.to_numpy()
 #    for i in range(len(merged.columns)-1):
 #        col =
 
@@ -184,11 +194,34 @@ def alpha_frequency(output_dir: str,
 
 def alpha_diversity(output_dir: str,
                 alpha_diversity: pd.Series,
-                metadata_col: str,
-                metadata: qiime2.Metadata) -> None:
+                metadata_column: str = None,
+                metadata: qiime2.Metadata = None,
+                palette: str = 'husl',
+                style: str = 'white',
+                context: str = 'paper',
+                labels : str = None ) -> None:
 
-    alpha_div1 = alpha_diversity1.to_frame()
-    alpha_div2 = alpha_diversity2.to_frame()
+#first 2 vectors
+
+    alpha_div1 = alpha_diversity[0].to_frame()
+    alpha_div2 = alpha_diversity[1].to_frame()
+    alpha_div1.index.name = "sample-id"
+    alpha_div1.reset_index(inplace=True)
+    alpha_div2.index.name = "sample-id"
+    alpha_div2.reset_index(inplace=True)
+
+    if not labels:
+
+        merged = pd.merge(alpha_div1, alpha_div2, on = 'sample-id')
+        merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
+        vars_to_plot = ['1', '2']
+
+    table_preview = merged.to_html()
+    with open('merged.html', 'w') as file:
+        file.write(table_preview)
+
+"""
+
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
     metadata.reset_index(inplace = True)
@@ -211,17 +244,7 @@ def alpha_diversity(output_dir: str,
     q2templates.render(index, output_dir)
 
 
-
-
-
-
-
-
-#taken from q2-feature-table/_visualizer
-def _frequencies(table, axis):
-    return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
-
-
+"""
 
 
 #add a print some text if no parameters are supplied & have errors if smtg goes wrong so u know how to fix it as user

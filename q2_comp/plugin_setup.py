@@ -67,7 +67,7 @@ plugin.visualizers.register_function(
         'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.',
     #    'plot_type': 'Type of plot to visualize data. If nothing is provided, all plots will be shown.'
     },
-    name= 'Frequency count pairwise plot',
+    name= 'Frequency count comparative analysis',
     description= "Visually compare the frequency tables obtained by different clustering methods with pairwise plots of samples ranked by frequency and colored by metadata." ,
 
 )
@@ -82,41 +82,28 @@ plugin.visualizers.register_function(
     },
     parameters={
         'metadata': Metadata,
-        'metadata_col': Str
+        'metadata_column': Str,
+        'palette': Str,
+        'style': Str,
+        'context': Str,
     },
     input_descriptions={
         'alpha_diversity': 'List of frequency feature table containing the samples to be compared.',
     },
     parameter_descriptions={
         'metadata': 'Sample metadata',
-        'metadata_col': 'Categorical metadata column to map plot to different colors.'
+        'metadata_col': 'Categorical metadata column to map plot to different colors.',
+        'palette': 'Palette to be chosen from seaborn color palette.',
+        'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
+        'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
     },
-    name='Frequency count boxplot',
+    name='Alpha diversity comparative analysis',
     description= "Visually compare the frequency tables obtained by different clustering methods with probablity curves and boxplots of samples ranked by frequency and colored by metadata.",
 )
 
 """
-#third function; statistical significance of adiv comparison
-plugin.visualizers.register_function(
-    function=q2_comp.adiv_stats,
-    inputs={
-        'table1': FeatureTable[Frequency],
-        'table2': FeatureTable[Frequency]
-    },
-    parameters={
-        'sample_metadata': MetadataColumn[Categorical] #can seaborn support numerical metadata
-    },from q2_types.feature_table import DADA2Stats
-
-    input_descriptions={
-        'table1': 'Frequency feature table containing the samples to be compared.',
-        'table2': 'Frequency feature table containing the samples to be compared'
-    },
-    parameter_descriptions={
-        'sample_metadata': 'Categorical metadata column.'
-    },
-    name='Frequency count statistics',
-    description="Statistically compare the frequency tables obtained by different clustering methods.",
-)
+#removed third function which was initially stats& incorporate in two above and add pipeline instead
 
 #add pipeline function for all a_div
 
