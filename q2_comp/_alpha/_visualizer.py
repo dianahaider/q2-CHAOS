@@ -100,14 +100,13 @@ def alpha_frequency(output_dir: str,
         melted_merged = pd.melt(merged, id_vars = 'sample-id')
         melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
 
-    table_preview = melted_merged.to_html()
-    with open('melted_merged.html', 'w') as file:
-        file.write(table_preview)
+        table_preview = melted_merged.to_html()
+        with open('melted_merged.html', 'w') as file:
+            file.write(table_preview)
 
-    table_preview2 = merged.to_html()
-    with open('merged.html', 'w') as file:
-        file.write(table_preview2)
-
+        table_preview2 = merged.to_html()
+        with open('merged.html', 'w') as file:
+            file.write(table_preview2)
 
         sns.set_style(style)
         sns.set_context(context)
@@ -118,7 +117,6 @@ def alpha_frequency(output_dir: str,
         pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
         plt.gcf().clear()
 
-#        if verbose:
         print('Plotting pairplot')
 
         raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
@@ -127,7 +125,6 @@ def alpha_frequency(output_dir: str,
         raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-#        if verbose:
         print('Plotting raincloud')
 
         boxplot_frequency = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
@@ -135,7 +132,6 @@ def alpha_frequency(output_dir: str,
         boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
-#        if verbose:
         print('Plotting boxplot')
 
     else:

@@ -86,13 +86,14 @@ plugin.visualizers.register_function(
         'palette': Str,
         'style': Str,
         'context': Str,
+        'labels':Str,
     },
     input_descriptions={
         'alpha_diversity': 'List of frequency feature table containing the samples to be compared.',
     },
     parameter_descriptions={
         'metadata': 'Sample metadata',
-        'metadata_col': 'Categorical metadata column to map plot to different colors.',
+        'metadata_column': 'Categorical metadata column to map plot to different colors.',
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
