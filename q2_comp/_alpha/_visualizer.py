@@ -242,6 +242,11 @@ def alpha_diversity(output_dir: str,
 
 """
 
+def _frequencies(table, axis):
+     return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
+
+
+
 
 #add a print some text if no parameters are supplied & have errors if smtg goes wrong so u know how to fix it as user
 
