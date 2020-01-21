@@ -20,6 +20,14 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 def plot_types():
     return {'line', 'bar'}
 
+def load_df(files, labels):
+    stats = []
+    for i in range(len(files)):
+        df = files[i].to_dataframe()
+        df['id'] = labels[i]
+        stats.append(df)
+    return stats
+
 def denoise_stats(output_dir: str,
                 stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 plot_type: str = 'line',
@@ -27,8 +35,58 @@ def denoise_stats(output_dir: str,
                 style: str = 'whitegrid',
                 context: str = 'talk') -> None:
 
-#maybe think of a way to integrate metadata into it
+    stats = load_df(stats, labels)
+    stats = pd.concat(stats)
+    numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
+    stats[numeric] = stats[numeric].apply(pd.to_numeric)
 
+    stats = stats.groupby('id').sum()
+    df = pd.melt(stats.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
+    input_read_number = df['read_number'].max()
+    df['% of Reads Remaining'] = df['read_number']/input_read_number * 100
+    step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
+    df['order'] = df['step'].apply(lambda x: step_order[x])
+    df = df.reset_index()
+
+    df['Run Number'] = 'Run ' + df['id']
+    hue_order = df.query('step == "non-chimeric"').sort_values('% of Reads Remaining', ascending = False)['id']
+
+
+    sns.set_style('whitegrid')
+    sns.set_context("talk")
+
+    plt.ylim(0,100)
+    plt.xlim(0,4)
+    plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-chimeric'])
+    plt.title('parameters what')
+    plt.xlabel('Processing Steps')
+
+    line_graph = sns.lineplot(data = df, y = '% of Reads Remaining', x = 'order', hue = 'Run Number')
+    line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.png'), bbox_inches = 'tight')
+    line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
+
+    table_preview2 = df.to_html()
+    with open('statsjan21.html', 'w') as file:
+        file.write(table_preview2)
+
+
+
+
+"""
+
+#first two stats
+    stats_df1 = stats[0].to_dataframe()
+    stats_df2 = stats[1].to_dataframe()
+    stats = stats_df1.join(stats_df2, sort = True)
+#    numeric = ['input','filtered','denoised','merged','non-chimeric']
+#    stats[numeric] = stats[numeric].apply(pd.to_numeric)
+#    stats['% of Reads Remaining'] = stats['non-chimeric']/stats['input']*100
+"""
+
+#maybe think of a way to integrate metadata into it
+"""
     df1 = stats1.to_dataframe()
     df2 = stats2.to_dataframe()
     df1['id'] = label1
@@ -77,7 +135,6 @@ default_labels_for_denoise_list = []
 for i in range(1,100):
     i = str(i)
     default_labels_for_denoise_list.append(i)
-"""
 
 def denoise_list(output_dir: str,
                 input_stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
@@ -133,3 +190,5 @@ def denoise_list(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
+
+"""
