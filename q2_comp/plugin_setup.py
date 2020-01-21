@@ -179,9 +179,9 @@ plugin.visualizers.register_function(
 #function5: denoise bar diagram take as input stats from qiime2 can only do dada2 for now!
 
 plugin.visualizers.register_function(
-    function=q2_comp.denoise_list,
+    function=q2_comp.denoise_stats,
     inputs={
-        'input_stats': List[SampleData[DADA2Stats]],
+        'stats': List[SampleData[DADA2Stats]],
     },
     parameters={
         'plot_type': Str % Choices (['line', 'bar']),
@@ -191,7 +191,7 @@ plugin.visualizers.register_function(
     },
     #no metadata here! UNLESS think of complex figure able to show per md categorical column
     input_descriptions={
-        'input_stats': 'List of denoising statistics from DADA2. All paths to file should be separated by a space only.',
+        'stats': 'List of denoising statistics from DADA2. All paths to file should be separated by a space only.',
     },
     parameter_descriptions={
         'plot_type': 'Type of plot visualization.',

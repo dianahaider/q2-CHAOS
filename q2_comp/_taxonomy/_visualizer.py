@@ -35,194 +35,72 @@ def taxo_variability(output_dir: str,
                 labels : str = None) -> None:
 
 #first 2 tables
+    sum1 = tables[0].sum()
+    sum1.sort_values(inplace = True, ascending = False)
+    sum1_df = sum1.to_frame()
+    sum1_df.index.name = "Feature-ID"
+    print("indexed 1")
+#prepare to merge taxonomy
+    taxo_df1 = taxonomy[0].to_frame()
+    taxo_df1.index.name = "Feature-ID"
+    merged_1 = pd.merge(sum1_df, taxo_df1, on = "Feature-ID")
+    merged_1.set_index('Taxon', inplace = True)
+    merged_1.reset_index(inplace=True)
+    print("merged 1")
 
-    sample_frequencies1 = _frequencies(tables[0], axis='sample')
-    sample_frequencies2 = _frequencies(tables[1], axis='sample')
-    sample_frequencies1.sort_values(inplace=True, ascending=False)
-    sample_frequencies2.sort_values(inplace=True, ascending=False)
-    sample_frequencies_df1 = sample_frequencies1.to_frame()
-    sample_frequencies_df2 = sample_frequencies2.to_frame()
-    sample_frequencies_df1.index.name = "sample-id"
-    sample_frequencies_df1.reset_index(inplace=True)
-    sample_frequencies_df2.index.name = "sample-id"
-    sample_frequencies_df2.reset_index(inplace=True)
+    table_preview = merged_1.to_html()
+    with open('merged_1.html', 'w') as file:
+        file.write(table_preview)
+    print("to html 1")
+
+    sum2 = tables[1].sum()
+    sum2.sort_values(inplace = True, ascending = False)
+    sum2_df = sum2.to_frame()
+    sum2_df.index.name = "Feature-ID"
+    taxo_df2 = taxonomy[1].to_frame()
+    taxo_df2.index.name = "Feature-ID"
+    merged_2 = pd.merge(sum2_df, taxo_df2, on = "Feature-ID")
+    merged_2.set_index('Taxon', inplace = True)
+    merged_2.reset_index(inplace=True)
+    print("same to 2")
+
+    merged_1_2 = pd.merge(merged_1, merged_2, on = "Taxon")
+    print("merged 1 and 2")
+
+    table_preview = merged_1_2.to_html()
+    with open('mergedtaxo.html', 'w') as file:
+        file.write(table_preview)
+
+"""
 
 
-    #if not metadata & labels:
-    #    raise ValueError("Metadata file was not provided")
+    merged_1 = pd.merge(sum1_df, taxo_df, on = "Feature-ID")
 
-#if no labels are given, label the inputs as numbers
     if not labels:
+        merged = pd.merge(sum1_df, sum2_df, on = "Feature-ID")
+        merged = merged.rename(columns = {'0_x' : '1', '0_y' : '2'})
+        vars_to_plot = ['1', '2']
 
-        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
-        merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
-        vars_to_plot = ['1','2']
+        taxo_df = taxonomy[0].to_frame()
+        merged_taxo = pd.merge(merged, taxo_df, on = "Feature-ID")
 
-        if verbose:
-            print('Labeling columns')
-
-        if len(tables)>2:
-            for i in range((len(tables))-2) :
-                sample_frequencies = _frequencies(tables[i+2], axis='sample')
-                sample_frequencies.sort_values(inplace=True, ascending=False)
-                sample_frequencies_df = sample_frequencies.to_frame()
-                sample_frequencies_df.index.name = "sample-id"
-                sample_frequencies_df.reset_index(inplace=True)
-                merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
-                merged = merged.rename(columns = {0:(i+3)})
-            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
-
-    else:
-        if len(labels) != len(tables):
-            raise ValueError("The number of labels is different than the number of tables")
-
-        merged = pd.merge(sample_frequencies_df1, sample_frequencies_df2, on = "sample-id")
-        merged = merged.rename(columns = {'0_x':labels[0], '0_y':labels[1]})
-        vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
-
-        if verbose:
-            print('Labeling columns')
-
-        if len(tables)>2:
-            for i in range((len(tables))-2) :
-                sample_frequencies = _frequencies(tables[i+2], axis='sample')
-                sample_frequencies.sort_values(inplace=True, ascending=False)
-                sample_frequencies_df = sample_frequencies.to_frame()
-                sample_frequencies_df.index.name = "sample-id"
-                sample_frequencies_df.reset_index(inplace=True)
-                merged = pd.merge(merged, sample_frequencies_df, on = "sample-id")
-                merged = merged.rename(columns = {0:labels[i+2]})
-            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
-
-    melted_merged = pd.melt(merged, id_vars = 'sample-id')
+    table_preview = merged_1.to_html()
+    with open('mergedtaxo.html', 'w') as file:
+        file.write(table_preview)
 
 
-    if not metadata:
+    for i in range(len(tables)):
+        new_sum = tables[i].sum()
+        new_sum.to_frame()
+        new_sum.index_name = "Feature-ID"
+"""
 
-        melted_merged = pd.melt(merged, id_vars = 'sample-id')
-        melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
-
-        sns.set_style(style)
-        sns.set_context(context)
-
-        pairplot_frequency = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
-
-        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
-        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting pairplot')
-
-        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
-                    orient = 'h', alpha = 0.65, palette = palette )
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting raincloud')
-
-        boxplot_frequency = sns.boxplot(data=melted_merged,x='Table',y='Sequencing Depth', palette = palette, saturation = 1)
-        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
-        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting boxplot')
-
-    else:
-        if not metadata_column:
-            raise ValueError("Metadata column not provided")
-
-        metadata = metadata.to_dataframe()
-        metadata.index.name = "sample-id"
-        metadata.reset_index(inplace = True)
-        merged_metadata = pd.merge(merged,metadata, on = "sample-id")
-
-        melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
-        melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Sequencing Depth'})
-
-        if verbose:
-            print('Merging metadata')
-
-        sns.set_style(style)
-        sns.set_context(context)
-
-        pairplot_frequency = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
-
-        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.png'))
-        pairplot_frequency.savefig(os.path.join(output_dir, 'pairplot_frequency.pdf'))
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting pairplot')
-
-        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
-                    orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting raincloud')
-
-        boxplot_frequency = sns.boxplot(data=melted_merged_metadata,x='Table',y='Sequencing Depth',hue=metadata_column, palette = palette, saturation = 1)
-        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.png'), bbox_inches = 'tight')
-        boxplot_frequency.figure.savefig(os.path.join(output_dir, 'boxplot.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
-
-        if verbose:
-            print('Plotting boxplot')
-
-#    for i in range(len(merged.columns)-1):
-#        col =
-
-
-
-
-    index = os.path.join(TEMPLATES, 'frequency_assets', 'index.html')
-    q2templates.render(index, output_dir)
-
-def alpha_diversity(output_dir: str,
-                alpha_diversity: pd.Series,
-                metadata_col: str,
-                metadata: qiime2.Metadata) -> None:
-
-    alpha_div1 = alpha_diversity1.to_frame()
-    alpha_div2 = alpha_diversity2.to_frame()
-    metadata = metadata.to_dataframe()
-    metadata.index.name = "sample-id"
-    metadata.reset_index(inplace = True)
-    alpha_div1.index.name = "sample-id"
-    alpha_div1.reset_index(inplace=True)
-    alpha_div2.index.name = "sample-id"
-    alpha_div2.reset_index(inplace=True)
-    smpl = pd.merge(alpha_div1, alpha_div2, on = "sample-id")
-    smpl = smpl.rename(columns = {'0_x':'Vector 1', '0_y':'Vector 2'})
-    melted_smpl = pd.melt(smpl, id_vars = 'sample-id')
-    melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
-    melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Vectors', 'value':'A diversity'})
-
-    niceplot = pt.RainCloud( x = 'Vectors', y = 'A diversity', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65, palette = 'husl' )
-    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.png'), bbox_inches = 'tight')
-    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.pdf'), bbox_inches = 'tight')
-    plt.gcf().clear()
-
-    index = os.path.join(TEMPLATES, 'diversity_assets', 'index.html')
-    q2templates.render(index, output_dir)
-
-
-
-
-
-
-
-
-#taken from q2-feature-table/_visualizer
-def _frequencies(table, axis):
-    return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
-
+"""
+    di = tables[0]
+    table_preview = di.to_html()
+    with open('preview2.html', 'w') as file:
+        file.write(table_preview)
+"""
 
 
 

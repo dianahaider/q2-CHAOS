@@ -19,15 +19,16 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 
 def plot_types():
     return {'line', 'bar'}
-"""
-def denoise_vis(output_dir: str,
-                stats1: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
-                stats2: qiime2.Metadata,
+
+def denoise_stats(output_dir: str,
+                stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
                 plot_type: str = 'line',
-                label1: str = 'Stats 1',
-                label2: str = 'Stats 2',
+                labels: str = None,
                 style: str = 'whitegrid',
                 context: str = 'talk') -> None:
+
+#maybe think of a way to integrate metadata into it
+
     df1 = stats1.to_dataframe()
     df2 = stats2.to_dataframe()
     df1['id'] = label1
