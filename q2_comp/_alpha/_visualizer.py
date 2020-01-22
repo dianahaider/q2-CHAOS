@@ -209,10 +209,47 @@ def alpha_diversity(output_dir: str,
     if not labels:
 
         merged = pd.merge(alpha_div1, alpha_div2, on = 'sample-id')
-        merged = merged.rename(columns = {'0_x':'1', '0_y':'2'})
+        merged = merged.rename(columns = {'shannon_x':'1', 'shannon_y':'2'})
         vars_to_plot = ['1', '2']
 
+        print ('Labeling columns...')
+
+        if len(alpha_diversity) >2:
+            for i in range((len(alpha_diversity))-2) :
+                alpha_div = alpha_diversity[i+2].to_frame()
+                alpha_div.index.name = "sample-id"
+                alpha_div.reset_index(inplace = True)
+                merged = pd.merge(merged, alpha_div, on = "sample-id")
+                merged = merged.rename(columns = {'shannon':(i+3)})
+            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+
+    else:
+        if len(labels) != len(alpha_diversity):
+            raise ValueError("The number of labels is different than the number of tables")
+
+        merged = pd.merge(alpha_div1, alpha_div2, on = "sample-id")
+        merged = merged.rename(columns = {'shannon_x':labels[0], 'shannon_y':labels[1]})
+        vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+
+        print('Labeling columns ...')
+
+        if len(alpha_diversity) >2:
+            for i in range((len(tables))-2) :
+                alpha_div = alpha_diversity[i+2].to_frame()
+                alpha_div.index.name = "sample-id"
+                alpha_div.reset_index(inplace = True)
+                merged = pd.merge(merged, alpha_div, on = "sample-id")
+                merged = merged.rename(columns = {'shannon':labels[i+2]})
+            vars_to_plot = list(merged.loc[:, merged.columns !='sample-id'])
+
+    melted_merged = pd.melt(merged, id_vars = 'sample-id')
+
+
     table_preview = merged.to_html()
+    with open('merged.html', 'w') as file:
+        file.write(table_preview)
+
+    table_preview = melted_merged.to_html()
     with open('merged.html', 'w') as file:
         file.write(table_preview)
 
