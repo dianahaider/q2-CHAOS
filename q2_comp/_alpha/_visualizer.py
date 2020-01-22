@@ -176,7 +176,7 @@ def alpha_frequency(output_dir: str,
         plt.gcf().clear()
 
 #        if verbose:
-        print('Plofeature tablestting boxplot ...')
+        print('Plotting boxplot ...')
 
 #    melted_merged.to_numpy()
 #    for i in range(len(merged.columns)-1):
@@ -319,32 +319,6 @@ def alpha_diversity(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'diversity_assets', 'index.html')
     q2templates.render(index, output_dir)
-
-"""
-feature tables
-    metadata = metadata.to_dataframe()
-    metadata.index.name = "sample-id"
-    metadata.reset_index(inplace = True)
-    alpha_div1.index.name = "sample-id"
-    alpha_div1.reset_index(inplace=True)
-    alpha_div2.index.name = "sample-id"
-    alpha_div2.reset_index(inplace=True)
-    smpl = pd.merge(alpha_div1, alpha_div2, on = "sample-id")
-    smpl = smpl.rename(columns = {'0_x':'Vector 1', '0_y':'Vector 2'})
-    melted_smpl = pd.melt(smpl, id_vars = 'sample-id')
-    melted_smpl_metadata = pd.merge(melted_smpl, metadata, on = "sample-id")
-    melted_smpl_metadata = melted_smpl_metadata.rename(columns = {'variable':'Vectors', 'value':'A diversity'})
-
-    niceplot = pt.RainCloud( x = 'Vectors', y = 'A diversity', data = melted_smpl_metadata, orient = 'h', hue = metadata_col, alpha = 0.65, palette = 'husl' )
-    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.png'), bbox_inches = 'tight')
-    niceplot.figure.savefig(os.path.join(output_dir, 'rainclouda.pdf'), bbox_inches = 'tight')
-    plt.gcf().clear()
-
-    index = os.path.join(TEMPLATES, 'diversity_assets', 'index.html')
-    q2templates.render(index, output_dir)
-
-
-"""
 
 def _frequencies(table, axis):
      return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))

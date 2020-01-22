@@ -20,13 +20,22 @@ TEMPLATES = pkg_resources.resource_filename('q2_comp', '_denoise')
 def plot_types():
     return {'line', 'bar'}
 
-def load_df(files, labels):
+def load_df_labels(files, labels):
     stats = []
     for i in range(len(files)):
         df = files[i].to_dataframe()
         df['id'] = labels[i]
         stats.append(df)
     return stats
+
+def load_df(files):
+    stats = []
+    for i in range(len(files)):
+        df = files[i].to_dataframe()
+        df['id'] = str(i+1)
+        stats.append(df)
+    return stats
+
 
 def denoise_stats(output_dir: str,
                 stats: qiime2.Metadata, #stats type is not a metadata but this is the transformer used by DADA2 plugin to make DADA2Stats into pd.dataframe
@@ -35,7 +44,12 @@ def denoise_stats(output_dir: str,
                 style: str = 'whitegrid',
                 context: str = 'talk') -> None:
 
-    stats = load_df(stats, labels)
+    if not labels:
+        stats = load_df(stats)
+
+    else:
+        stats = load_df_labels(stats, labels)
+
     stats = pd.concat(stats)
     numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
     stats[numeric] = stats[numeric].apply(pd.to_numeric)
@@ -62,13 +76,18 @@ def denoise_stats(output_dir: str,
     plt.xlim(0,4)
     plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-chimeric'])
     plt.xlabel('Processing Steps')
-    plt.title('allow to give any title or default one')
+#    plt.title('allow to give any title or default one')
 
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.png'), bbox_inches = 'tight')
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
+"""
+    #maybe the bargraph
+    r = [0,len(stats)]
+    poop = df['id'=='']
+    bar_plot = plt.bar()
 
-
+"""
     table_preview2 = df.to_html()
     with open('statsjan21.html', 'w') as file:
         file.write(table_preview2)
