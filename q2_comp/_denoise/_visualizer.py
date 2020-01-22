@@ -55,13 +55,15 @@ def denoise_stats(output_dir: str,
     sns.set_style('whitegrid')
     sns.set_context("talk")
 
+
+    line_graph = sns.lineplot(data = df, y = '% of Reads Remaining', x = 'order', hue = 'Run Number')
+
     plt.ylim(0,100)
     plt.xlim(0,4)
     plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-chimeric'])
-    plt.title('parameters what')
     plt.xlabel('Processing Steps')
+    plt.title('allow to give any title or default one')
 
-    line_graph = sns.lineplot(data = df, y = '% of Reads Remaining', x = 'order', hue = 'Run Number')
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.png'), bbox_inches = 'tight')
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
@@ -70,6 +72,9 @@ def denoise_stats(output_dir: str,
     table_preview2 = df.to_html()
     with open('statsjan21.html', 'w') as file:
         file.write(table_preview2)
+
+    index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
+    q2templates.render(index, output_dir)
 
 
 
