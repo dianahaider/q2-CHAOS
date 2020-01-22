@@ -1,21 +1,45 @@
-
 {% extends 'base.html' %}
 
 {% block title %}q2_comp: Alpha diversity{% endblock %}
 
 {% block content %}
-  <h1>Comparison of feature tables</h1>
-
+  <h1>Exploratory visualizations and statistics for the comparison of alpha diversity indices</h1>
+  <h3>Pairwise comparison of alpha diversity indices</h3>
     <div class="col-lg-12">
-      <img src="rainclouda.png" class="center-block">
-      <a href="rainclouda.pdf">
+      <img src="pairplot_diversity.png" class="center-block">
+      <a href="pairplot_diversity.pdf">
         <br>
         <p class="text-center">Download as PDF</p>
       </a>
-      <a href="rainclouda.png">
-        <br>
+      <a href="pairplot_diversity.png">
         <p class="text-center">Download as PNG</p>
       </a>
     </div>
+
+  <h3>Raincloud plot of alpha diversity indices</h3>
+
+    <div class="col-lg-12">
+      <img src="raincloud_diversity.png" class="center-block">
+      <a href="raincloud_diversity.pdf">
+        <br>
+        <p class="text-center">Download as PDF</p>
+      </a>
+      <a href="raincloud_diversity.png">
+        <p class="text-center">Download as PNG</p>
+      </a>
+    </div>
+
+    <h3>Boxplot of feature tables</h3>
+
+      <div class="col-lg-12">
+        <img src="boxplot_diversity.png" class="center-block">
+        <a href="boxplot_diversity.pdf">
+          <br>
+          <p class="text-center">Download as PDF</p>
+        </a>
+        <a href="boxplot_diversity.png">
+          <p class="text-center">Download as PNG</p>
+        </a>
+      </div>
 
 {% endblock %}

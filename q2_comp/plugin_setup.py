@@ -86,7 +86,7 @@ plugin.visualizers.register_function(
         'palette': Str,
         'style': Str,
         'context': Str,
-        'labels':Str,
+        'labels': List[Str],
     },
     input_descriptions={
         'alpha_diversity': 'List of frequency feature table containing the samples to be compared.',

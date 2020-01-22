@@ -176,7 +176,7 @@ def alpha_frequency(output_dir: str,
         plt.gcf().clear()
 
 #        if verbose:
-        print('Plotting boxplot ...')
+        print('Plofeature tablestting boxplot ...')
 
 #    melted_merged.to_numpy()
 #    for i in range(len(merged.columns)-1):
@@ -234,7 +234,7 @@ def alpha_diversity(output_dir: str,
         print('Labeling columns ...')
 
         if len(alpha_diversity) >2:
-            for i in range((len(tables))-2) :
+            for i in range((len(alpha_diversity))-2) :
                 alpha_div = alpha_diversity[i+2].to_frame()
                 alpha_div.index.name = "sample-id"
                 alpha_div.reset_index(inplace = True)
@@ -244,17 +244,84 @@ def alpha_diversity(output_dir: str,
 
     melted_merged = pd.melt(merged, id_vars = 'sample-id')
 
+    if not metadata:
 
-    table_preview = merged.to_html()
-    with open('merged.html', 'w') as file:
-        file.write(table_preview)
+        melted_merged = pd.melt(merged, id_vars = 'sample-id')
+        melted_merged = melted_merged.rename(columns = {'variable':'Table', 'value':'Alpha Diversity Index'})
 
-    table_preview = melted_merged.to_html()
-    with open('merged.html', 'w') as file:
-        file.write(table_preview)
+        print('Plotting pairplot ...')
+
+        sns.set_style(style)
+        sns.set_context(context)
+
+        pairplot_diversity = sns.pairplot(merged, vars = vars_to_plot, palette = palette)
+
+        pairplot_diversity.savefig(os.path.join(output_dir, 'pairplot_diversity.png'))
+        pairplot_diversity.savefig(os.path.join(output_dir, 'pairplot_diversity.pdf'))
+        plt.gcf().clear()
+
+        print('Plotting raincloud ...')
+
+        raincloud_diversity = pt.RainCloud(x = 'Table', y = 'Alpha Diversity Index', data = melted_merged,
+        orient = 'h', alpha = 0.65, palette = palette)
+        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
+        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
+
+        print('Plotting boxplot ...')
+
+        boxplot_diversity = sns.boxplot(data = melted_merged, x= 'Table', y= 'Alpha Diversity Index', palette = palette,
+        saturation = 1)
+        boxplot_diversity.figure.savefig(os.path.join(output_dir, 'boxplot_diversity.png'), bbox_inches = 'tight')
+        boxplot_diversity.figure.savefig(os.path.join(output_dir, 'boxplot_diversity.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
+
+    else:
+        if not metadata_column:
+            raise ValueError("Metadata column not provided")
+
+        print('Merging metadata ...')
+        metadata = metadata.to_dataframe()
+        metadata.index.name = "sample-id"
+        metadata.reset_index(inplace = True)
+        merged_metadata = pd.merge(merged, metadata, on = "sample-id")
+
+        melted_merged_metadata = pd.merge(melted_merged, metadata, on = "sample-id")
+        melted_merged_metadata = melted_merged_metadata.rename(columns = {'variable':'Table', 'value':'Alpha Diversity Index'})
+
+        print('Plotting pairplot ...')
+
+        sns.set_style(style)
+        sns.set_context(context)
+
+        pairplot_diversity = sns.pairplot(merged_metadata, hue = metadata_column, vars = vars_to_plot, palette = palette)
+
+        pairplot_diversity.savefig(os.path.join(output_dir, 'pairplot_diversity.png'))
+        pairplot_diversity.savefig(os.path.join(output_dir, 'pairplot_diversity.pdf'))
+        plt.gcf().clear()
+
+        print('Plotting raincloud ...')
+
+        raincloud_diversity = pt.RainCloud( x = 'Table', y = 'Alpha Diversity Index', data = melted_merged_metadata,
+                    orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
+        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
+        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
+
+        print('Plotting boxplot ...')
+
+        boxplot_diversity = sns.boxplot(data=melted_merged_metadata,x='Table',y='Alpha Diversity Index',hue=metadata_column, palette = palette, saturation = 1)
+        boxplot_diversity.figure.savefig(os.path.join(output_dir, 'boxplot_diversity.png'), bbox_inches = 'tight')
+        boxplot_diversity.figure.savefig(os.path.join(output_dir, 'boxplot_diversity.pdf'), bbox_inches = 'tight')
+        plt.gcf().clear()
+
+
+
+    index = os.path.join(TEMPLATES, 'diversity_assets', 'index.html')
+    q2templates.render(index, output_dir)
 
 """
-
+feature tables
     metadata = metadata.to_dataframe()
     metadata.index.name = "sample-id"
     metadata.reset_index(inplace = True)
@@ -283,8 +350,8 @@ def _frequencies(table, axis):
      return pd.Series(data=table.sum(axis=axis), index=table.ids(axis=axis))
 
 
-
-
+#read https://www.python.org/dev/peps/pep-0257/
+# add comments everywhere to remember what u did
 #add a print some text if no parameters are supplied & have errors if smtg goes wrong so u know how to fix it as user
 
 #add an --help & --citations
