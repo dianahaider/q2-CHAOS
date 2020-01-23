@@ -48,7 +48,7 @@ def denoise_stats(output_dir: str,
         stats = load_df(stats)
 
     else:
-        stats = load_df_labels(stats, labels)
+        stats = load_df_labels(statspossible, labels)
 
     stats = pd.concat(stats)
     numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
@@ -81,16 +81,29 @@ def denoise_stats(output_dir: str,
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.png'), bbox_inches = 'tight')
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
-"""
-    #maybe the bargraph
-    r = [0,len(stats)]
-    poop = df['id'=='']
-    bar_plot = plt.bar()
 
-"""
-    table_preview2 = df.to_html()
-    with open('statsjan21.html', 'w') as file:
-        file.write(table_preview2)
+    #maybe the bargraph
+    r = [0,(len(stats)-1)]
+    colors = ['darkorange', 'orange', 'sandybrown', 'navajowhite', 'blanchedalmond']
+    Step = ['Input', 'Filtered', 'Denoised', 'Merged', 'Non-chimeric']
+    plt.bar(r, df[df['step']=='input']['read_number'], color = colors[0], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df['step']=='filtered']['read_number'], color = colors[1], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df[step]=='denoised']['read_number'], color = colors[2], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df[step]=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df[step]=='non-chimeric']['read_number'], color = colors[4], edgecolor = 'white', width = 1)
+
+    plt.xlabel('Method')
+    plt.ylabel('Sequencing Depth')
+
+    plt.legend(Step, bbox_to_anchor=(1.05,1), loc=2)
+
+    bar_plot = plt.show()
+
+    bar_plot.figure.savefig(os.path.join(output_dir, 'bar_plot.png'), bbox_inches = 'tight')
+    bar_plot.figure.savefig(os.path.join(output_dir, 'bar_plot.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
+
 
     index = os.path.join(TEMPLATES, 'denoise_assets', 'index.html')
     q2templates.render(index, output_dir)
