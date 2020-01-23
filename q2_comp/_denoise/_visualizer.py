@@ -48,12 +48,12 @@ def denoise_stats(output_dir: str,
         stats = load_df(stats)
 
     else:
-        stats = load_df_labels(statspossible, labels)
+        stats = load_df_labels(stats, labels)
 
     stats = pd.concat(stats)
     numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
     stats[numeric] = stats[numeric].apply(pd.to_numeric)
-
+#makes into a df
     stats = stats.groupby('id').sum()
     df = pd.melt(stats.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_number = df['read_number'].max()
@@ -83,24 +83,28 @@ def denoise_stats(output_dir: str,
     plt.gcf().clear()
 
     #maybe the bargraph
-    r = [0,(len(stats)-1)]
+    r = range(len(stats))
+    vars_to_plot = df['id'].values
+
+    print(df.shape)
+
     colors = ['darkorange', 'orange', 'sandybrown', 'navajowhite', 'blanchedalmond']
     Step = ['Input', 'Filtered', 'Denoised', 'Merged', 'Non-chimeric']
     plt.bar(r, df[df['step']=='input']['read_number'], color = colors[0], edgecolor = 'white', width = 1)
     plt.bar(r, df[df['step']=='filtered']['read_number'], color = colors[1], edgecolor = 'white', width = 1)
-    plt.bar(r, df[df[step]=='denoised']['read_number'], color = colors[2], edgecolor = 'white', width = 1)
-    plt.bar(r, df[df[step]=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
-    plt.bar(r, df[df[step]=='non-chimeric']['read_number'], color = colors[4], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df['step']=='denoised']['read_number'], color = colors[2], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df['step']=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df['step']=='non-chimeric']['read_number'], color = colors[4], edgecolor = 'white', width = 1)
 
+    plt.xticks(r, vars_to_plot, fontweight = 'bold')
     plt.xlabel('Method')
     plt.ylabel('Sequencing Depth')
 
     plt.legend(Step, bbox_to_anchor=(1.05,1), loc=2)
 
-    bar_plot = plt.show()
 
-    bar_plot.figure.savefig(os.path.join(output_dir, 'bar_plot.png'), bbox_inches = 'tight')
-    bar_plot.figure.savefig(os.path.join(output_dir, 'bar_plot.pdf'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(output_dir, 'bar_plot.png'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(output_dir, 'bar_plot.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
 
@@ -148,7 +152,9 @@ def denoise_stats(output_dir: str,
 
     sns.lineplot(data = new_df, y='% of Reads Remaining', x='order', hue='id')
     plt.ylim(0,100)
-    plt.xlim(0,4)
+    plt.xlim(0,4)    table_preview = new_df.to_html()
+    with open('outfile.html', 'w') as file:
+        file.write(table_preview)
     plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-Chimeric'])
     plt.xlabel('Processing Steps')
     plt.title('Parameter Settings')
