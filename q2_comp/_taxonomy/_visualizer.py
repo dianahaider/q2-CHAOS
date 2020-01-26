@@ -54,9 +54,6 @@ def taxo_variability(output_dir: str,
     #because the frequency didn't ahve a column name, rename it 1 or by the label given
     merged_1.rename(columns = {0:1})
 
-    table_preview = merged_1.to_html()
-    with open('merged_1.html', 'w') as file:
-        file.write(table_preview)
 
     #repeat the same method but for table/taxo2
     sum2 = tables[1].sum()
@@ -71,11 +68,20 @@ def taxo_variability(output_dir: str,
     #now merge the two dataframes on their taxonomy
     merged_1_2 = pd.merge(merged_1, merged_2, on = "Taxon")
 
-    table_preview = merged_1_2.to_html()
-    with open('taxojan24-1.html', 'w') as file:
+    print('successfully merged on taxon')
+
+    #group by taxon then melt table?
+    merged_without_sample_id = merged_1_2.groupby(['Taxon']).sum()
+    melted_merged = pd.melt(merged_without_sample_id)
+
+    print('just merged')
+
+    table_preview = melted_merged.to_html()
+    with open('melted_taxo_table.html', 'w') as file:
         file.write(table_preview)
 
-#    merged_without_sample_id = merged_1_2.groupby(['Taxon']).sum()
+    print("just switch to html")
+
     variances = []
     for i in range(len(merged_1_2.index)):
         var_temp = np.var(merged_1_2.iloc[i,:])
