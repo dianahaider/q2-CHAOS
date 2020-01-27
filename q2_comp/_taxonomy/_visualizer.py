@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab
 import ptitprince as pt
 from scipy.spatial.distance import pdist, squareform
+from sklearn import preprocessing
 
 
 
@@ -31,6 +32,7 @@ def taxo_variability(output_dir: str,
                 palette: str = 'husl',
                 style: str = 'white',
                 context: str = 'paper',
+                quantile: float = 0.8,
 #                plot_type: str = 'all',
                 labels : str = None) -> None:
 
@@ -41,58 +43,79 @@ def taxo_variability(output_dir: str,
     sum1.sort_values(inplace = True, ascending = False)
     sum1_df = sum1.to_frame()
     #sum1_df is a dataframe with index= feature-ID and column2= frequency across all samples
-    #transform the index to a column for plotting later
-    sum1_df['Feature-ID'] = sum1_df.index
+    #give the index a name
+    sum1_df.index.name = 'Feature-ID'
     #prepare to merge taxonomy
     #taxonomy is a list of pd.series with the corresponding feature-id to taxonomy
     #so first transform to a frame
     taxo_df1 = taxonomy[0].to_frame()
-    #Feature-ID is the index to make it to a column
-    taxo_df1['Feature-ID'] = taxo_df1.index
+    #Feature-ID is the index
+    taxo_df1.index.name = 'Feature-ID'
     #now merge the 2 dataframes to get one dataframe of Taxon, Feature ID, and frequency for method1
     merged_1 = pd.merge(sum1_df, taxo_df1, on = "Feature-ID")
+    #Taxon is a column, and Feature-ID is the index_name
+    #get rid of feature-id for this analysis by setting the taxon as the index id
+    merged_1.set_index('Taxon', inplace = True)
+    merged_1.reset_index(inplace = True)
     #because the frequency didn't ahve a column name, rename it 1 or by the label given
-    merged_1.rename(columns = {0:1})
-
+    merged_1 = merged_1.rename(columns = {0:1})
 
     #repeat the same method but for table/taxo2
     sum2 = tables[1].sum()
     sum2.sort_values(inplace = True, ascending = False)
     sum2_df = sum2.to_frame()
-    sum2_df['Feature-ID'] = sum2_df.index
+    sum2_df.index.name = 'Feature-ID'
     taxo_df2 = taxonomy[1].to_frame()
-    taxo_df2['Feature-ID'] = taxo_df2.index
+    taxo_df2.index.name = 'Feature-ID'
     merged_2 = pd.merge(sum2_df, taxo_df2, on = "Feature-ID")
-    merged_2.rename(columns = {0:2})
+    merged_2 = merged_2.rename(columns = {0:2})
 
     #now merge the two dataframes on their taxonomy
     merged_1_2 = pd.merge(merged_1, merged_2, on = "Taxon")
+    #merged_1_2 is index=taxon name & each column is one method
 
-    print('successfully merged on taxon')
+    #group by taxon because we don't care for per sample
+    merged_grouped_taxons = merged_1_2.groupby(['Taxon']).sum()
+    #transform index to colum for melting
+    #merged_grouped_taxons['Taxon'] = merged_grouped_taxons.index
+    #merged_grouped_taxons.reset_index
 
-    #group by taxon then melt table?
-    merged_without_sample_id = merged_1_2.groupby(['Taxon']).sum()
-    melted_merged = pd.melt(merged_without_sample_id)
-
-    print('just merged')
-
-    table_preview = melted_merged.to_html()
-    with open('melted_taxo_table.html', 'w') as file:
-        file.write(table_preview)
-
-    print("just switch to html")
+    print (merged_grouped_taxons)
 
     variances = []
-    for i in range(len(merged_1_2.index)):
-        var_temp = np.var(merged_1_2.iloc[i,:])
+    for i in range(len(merged_grouped_taxons.index)):
+        var_temp = np.var(merged_grouped_taxons.iloc[i,:])
         variances.append(var_temp)
 
+    merged_grouped_taxons['variance'] = variances
+    new_df = merged_grouped_taxons.loc[merged_grouped_taxons['variance'] >= merged_grouped_taxons.variance.quantile(quantile)]
+    new_df = new_df.sort_values(by=['variance'])
+    df_to_plot = new_df.drop(columns = ['variance'])
+    print (df_to_plot)
 
-    merged_1_2['variance'] = variances
 
-    table_preview = merged_1_2.to_html()
-    with open('taxojan24-2.html', 'w') as file:
-        file.write(table_preview)
+#    merged_1_2['variance'] = variances
+
+    heatmap = sns.heatmap(df_to_plot, linewidths= .2, cmap="YlGnBu")
+
+    heatmap.figure.savefig(os.path.join(output_dir, 'heatmap.png'), bbox_inches = 'tight')
+    heatmap.figure.savefig(os.path.join(output_dir, 'heatmap.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
+
+    index = os.path.join(TEMPLATES, 'taxonomy_assets', 'index.html')
+    q2templates.render(index, output_dir)
+
+
+"""
+    temp_values = merged_grouped_taxons.values
+    min_max_scaler = preprocessing.MinMaxScaler()
+    temp_values_scaled = min_max_scaler.fit_transform(temp_values)
+    norm_data = pd.DataFrame(temp_values_scaled)
+
+    print(temp_values_scaled)
+"""
+
 
 """
     #sort the dataframe by highest values for variances

@@ -25,6 +25,9 @@ setup(
                     'q2_comp': ['citations.bib'],
                     'q2_comp._denoise': [
                         'denoise_assets/index.html'
+                    ],
+                    'q2_comp._taxonomy': [
+                        'taxonomy_assets/index.html'
                     ]
                     },
 

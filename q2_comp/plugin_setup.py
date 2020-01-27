@@ -1,7 +1,7 @@
 #add license
 
 from qiime2.plugin import   (Str, Citations, Plugin, Visualization, MetadataColumn,
-                            Categorical, Metadata, Set, Numeric, Choices, List)
+                            Categorical, Metadata, Set, Numeric, Choices, List, Float)
 import versioneer
 
 #import my functions
@@ -254,6 +254,7 @@ plugin.visualizers.register_function(
         'palette' : Str,
         'style' : Str,
         'context' : Str,
+        'quantile' : Float,
         'labels' : List[Str]
     },
     input_descriptions={
@@ -266,7 +267,8 @@ plugin.visualizers.register_function(
         'palette': 'Palette to be chosen from seaborn color palette.',
         'style': 'Set a figure style according to personal preferences amongst: darkgrid, whitegrid, dark, white, and ticks.',
         'context': 'Set a figure context according to plot use. Contexts are: paper, notebook, talk and poster.',
-        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.'
+        'labels': 'List of labels for each respective tables. The number of labels should be the same as the number of tables, and they should be written in the same order.',
+        'quantile': 'Quantile of most variable total data to plot.'
     },
     name=
         'Taxonomic assignment comparison',
