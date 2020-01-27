@@ -14,6 +14,7 @@ import numpy as np
 import seaborn as sns
 import scipy.stats
 import matplotlib
+import re
 import matplotlib.pyplot as plt
 import matplotlib.pylab
 import ptitprince as pt
@@ -59,6 +60,9 @@ def taxo_variability(output_dir: str,
     merged_1.reset_index(inplace = True)
     #because the frequency didn't ahve a column name, rename it 1 or by the label given
     merged_1 = merged_1.rename(columns = {0:1})
+    merged_1 = merged_1.groupby(['Taxon']).sum()
+
+    print('merged first table ...')
 
     #repeat the same method but for table/taxo2
     sum2 = tables[1].sum()
@@ -69,18 +73,39 @@ def taxo_variability(output_dir: str,
     taxo_df2.index.name = 'Feature-ID'
     merged_2 = pd.merge(sum2_df, taxo_df2, on = "Feature-ID")
     merged_2 = merged_2.rename(columns = {0:2})
+    merged_2 = merged_2.groupby(['Taxon']).sum()
+    print('merged second table ...')
 
     #now merge the two dataframes on their taxonomy
-    merged_1_2 = pd.merge(merged_1, merged_2, on = "Taxon")
+    merged = pd.merge(merged_1, merged_2, on = "Taxon")
     #merged_1_2 is index=taxon name & each column is one method
 
+
+    if len(taxonomy)>2:
+        if len(tables) != len(taxonomy):
+            raise ValueError("The number of tables is different than the number of taxonomies")
+
+        for i in range((len(tables))-2) :
+            sum = tables[i+2].sum()
+            sum.sort_values(inplace = True, ascending = False)
+            sum_df = sum.to_frame()
+            sum_df.index.name = 'Feature-ID'
+            taxo_df = taxonomy[i+2].to_frame()
+            taxo_df.index.name = 'Feature-ID'
+            merged_t = pd.merge(sum_df, taxo_df, on = "Feature-ID")
+            merged_t = merged_t.rename(columns = {0:(i+3)})
+            merged_t = merged_t.groupby(['Taxon']).sum()
+            merged = pd.merge(merged, merged_t, on = "Taxon")
+
+    print ('merged all tables ...')
+
     #group by taxon because we don't care for per sample
-    merged_grouped_taxons = merged_1_2.groupby(['Taxon']).sum()
+    merged_grouped_taxons = merged.groupby(['Taxon']).sum()
     #transform index to colum for melting
     #merged_grouped_taxons['Taxon'] = merged_grouped_taxons.index
     #merged_grouped_taxons.reset_index
 
-    print (merged_grouped_taxons)
+    print ('merged_grouped_taxons')
 
     variances = []
     for i in range(len(merged_grouped_taxons.index)):
