@@ -79,7 +79,7 @@ def taxo_variability(output_dir: str,
     #now merge the two dataframes on their taxonomy
     merged = pd.merge(merged_1, merged_2, on = "Taxon")
     #merged_1_2 is index=taxon name & each column is one method
-
+    print (merged)
 
     if len(taxonomy)>2:
         if len(tables) != len(taxonomy):
@@ -98,7 +98,7 @@ def taxo_variability(output_dir: str,
             merged = pd.merge(merged, merged_t, on = "Taxon")
 
     print ('merged all tables ...')
-
+    print (merged)
     #group by taxon because we don't care for per sample
     merged_grouped_taxons = merged.groupby(['Taxon']).sum()
     #transform index to colum for melting
@@ -106,6 +106,7 @@ def taxo_variability(output_dir: str,
     #merged_grouped_taxons.reset_index
 
     print ('merged_grouped_taxons')
+    print (merged_grouped_taxons)
 
     variances = []
     for i in range(len(merged_grouped_taxons.index)):
@@ -118,6 +119,8 @@ def taxo_variability(output_dir: str,
     df_to_plot = new_df.drop(columns = ['variance'])
     print (df_to_plot)
 
+    table_html = q2templates.df_to_html(df_to_plot)
+    
 
 #    merged_1_2['variance'] = variances
 
