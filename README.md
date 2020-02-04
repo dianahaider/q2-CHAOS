@@ -16,7 +16,7 @@ python setup.py install
 
 ## CHAOS! Clustering Helper: ASVs and OTUs Scrutinized
 
-<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; &#129327; Compare both quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
+<p>Clustering, or denoising of high-throughput sequencing can get confusing because of the diversity of parameters, and methods! &#128549; &#129327; Compare quantifies differences between methods and is a visual exploration tool for your post-clustering or post-denoising data.</p>
 <br>
 CHAOS conducts pairwise comparisons of alpha diversity or frequency tables, and comparisons of denoising statistics.
 <br>
