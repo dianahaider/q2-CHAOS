@@ -77,7 +77,7 @@ def taxo_variability(output_dir: str,
     print('merged second table ...')
 
     #now merge the two dataframes on their taxonomy
-    merged = pd.merge(merged_1, merged_2, on = "Taxon")
+    merged = pd.merge(merged_1, merged_2, on = "Taxon", how='outer')
     #merged_1_2 is index=taxon name & each column is one method
     print (merged)
 
@@ -95,32 +95,36 @@ def taxo_variability(output_dir: str,
             merged_t = pd.merge(sum_df, taxo_df, on = "Feature-ID")
             merged_t = merged_t.rename(columns = {0:(i+3)})
             merged_t = merged_t.groupby(['Taxon']).sum()
-            merged = pd.merge(merged, merged_t, on = "Taxon")
+            merged = pd.merge(merged, merged_t, on = "Taxon", how='outer')
 
+    print (merged)
     print ('merged all tables ...')
     print (merged)
     #group by taxon because we don't care for per sample
-    merged_grouped_taxons = merged.groupby(['Taxon']).sum()
+    taxons = merged.groupby(['Taxon']).sum()
     #transform index to colum for melting
     #merged_grouped_taxons['Taxon'] = merged_grouped_taxons.index
     #merged_grouped_taxons.reset_index
 
     print ('merged_grouped_taxons')
-    print (merged_grouped_taxons)
 
     variances = []
-    for i in range(len(merged_grouped_taxons.index)):
-        var_temp = np.var(merged_grouped_taxons.iloc[i,:])
+    for i in range(len(taxons.index)):
+        var_temp = np.var(taxons.iloc[i,:])
         variances.append(var_temp)
 
-    merged_grouped_taxons['variance'] = variances
-    new_df = merged_grouped_taxons.loc[merged_grouped_taxons['variance'] >= merged_grouped_taxons.variance.quantile(quantile)]
+    taxons['variance'] = variances
+    new_df = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
     new_df = new_df.sort_values(by=['variance'])
     df_to_plot = new_df.drop(columns = ['variance'])
     print (df_to_plot)
 
+    table_preview = df_to_plot.to_csv()
+    with open('resulting_table.csv', 'w') as file:
+        file.write(table_preview)
+
     table_html = q2templates.df_to_html(df_to_plot)
-    
+
 
 #    merged_1_2['variance'] = variances
 
@@ -133,6 +137,17 @@ def taxo_variability(output_dir: str,
 
     index = os.path.join(TEMPLATES, 'taxonomy_assets', 'index.html')
     q2templates.render(index, output_dir)
+
+
+
+"""
+    x = merged_grouped_taxons.values
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    scaled_taxons = pd.DataFrame(x_scaled, columns = merged_grouped_taxons.columns)
+"""
+
+
 
 
 """
