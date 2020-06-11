@@ -65,7 +65,6 @@ def denoise_stats(output_dir: str,
     df['Run Number'] = 'Run ' + df['id']
     hue_order = df.query('step == "non-chimeric"').sort_values('% of Reads Remaining', ascending = False)['id']
 
-
     sns.set_style('whitegrid')
     sns.set_context("talk")
 

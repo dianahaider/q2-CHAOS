@@ -114,24 +114,40 @@ def taxo_variability(output_dir: str,
         variances.append(var_temp)
 
     taxons['variance'] = variances
-    new_df = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
-    new_df = new_df.sort_values(by=['variance'])
-    df_to_plot = new_df.drop(columns = ['variance'])
-    print (df_to_plot)
+    df_most_var = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
+    df_most_var = df_most_var.sort_values(by=['variance'])
+    df_most_var_plot = df_most_var.drop(columns = ['variance'])
+    df_most_var_plot = (np.log(df_most_var_plot)).replace(-np.inf, 0)
+    print (df_most_var_plot)
 
-    table_preview = df_to_plot.to_csv()
+    df_less_var = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
+    df_less_var = df_less_var.sort_values(by=['variance'], ascending=False)
+    df_less_var_plot = df_less_var.drop(columns = ['variance'])
+    df_less_var_plot = (np.log(df_less_var_plot)).replace(-np.inf, 0)
+    print (df_less_var_plot)
+
+    table_preview = df_less_var_plot.to_csv()
     with open('resulting_table.csv', 'w') as file:
         file.write(table_preview)
 
-    table_html = q2templates.df_to_html(df_to_plot)
+    table1_html = q2templates.df_to_html(df_most_var_plot)
+    df_most_var_plot.to_csv(os.path.join(output_dir, 'table.csv'))
 
+    table2_html = q2templates.df_to_html(df_less_var_plot)
+    df_less_var_plot.to_csv(os.path.join(output_dir, 'table.csv'))
 
 #    merged_1_2['variance'] = variances
 
-    heatmap = sns.heatmap(df_to_plot, linewidths= .2, cmap="YlGnBu")
+    heatmap_most = sns.heatmap(df_most_var_plot, linewidths= .2, cmap="YlGnBu")
+    heatmap_less = sns.heatmap(df_less_var_plot, linewidths= .2, cmap="YlGnBu")
 
-    heatmap.figure.savefig(os.path.join(output_dir, 'heatmap.png'), bbox_inches = 'tight')
-    heatmap.figure.savefig(os.path.join(output_dir, 'heatmap.pdf'), bbox_inches = 'tight')
+
+    heatmap_most.figure.savefig(os.path.join(output_dir, 'heatmap_most.png'), bbox_inches = 'tight')
+    heatmap_most.figure.savefig(os.path.join(output_dir, 'heatmap_most.pdf'), bbox_inches = 'tight')
+    plt.gcf().clear()
+
+    heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.png'), bbox_inches = 'tight')
+    heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
 
 
@@ -197,6 +213,72 @@ def taxo_variability(output_dir: str,
     with open('preview2.html', 'w') as file:
         file.write(table_preview)
 """
+
+
+
+
+
+"""
+################### june 10
+#tempted to print the tables
+def _build_seq_len_table(qscores: pd.DataFrame) -> str:
+    sequence_lengths = qscores.notnull().sum(axis=1).copy()
+    stats = _compute_stats_of_df(sequence_lengths)
+
+    stats[stats.index != 'count'] = \
+        stats[stats.index != 'count'].astype(int).apply('{} nts'.format)
+
+    stats.rename(index={'50%': '50% (Median)',
+                        'count': 'Total Sequences Sampled'},
+                 inplace=True)
+    frame = stats.to_frame(name="")
+    return q2templates.df_to_html(frame)
+
+
+        html_df = result.to_frame()
+        context['result'] = context['result'].join(html_df, how='outer')
+
+   context['result_data'] = \
+        q2templates.df_to_html(context['result_data'].transpose())
+
+    # Create a TSV before turning into HTML table
+    result_fn = 'per-sample-fastq-counts.tsv'
+    result_path = os.path.join(output_dir, result_fn)
+    context['result'].to_csv(result_path, header=True, index=True, sep='\t')
+
+    context['result'] = q2templates.df_to_html(context['result'])
+
+    q2templates.render(templates, output_dir, context=context)
+
+    shutil.copytree(os.path.join(TEMPLATES, 'assets', 'dist'),
+                    os.path.join(output_dir, 'dist'))
+
+    with open(os.path.join(output_dir, 'data.jsonp'), 'w') as fh:
+        fh.write("app.init(")
+        json.dump({'subsampleSize': subsample_size,
+                   'totalSeqCount': sequence_count,
+                   'minSeqLen': min_seq_len}, fh)
+        fh.write(', ')
+        if qual_stats['forward'] is not None and not \
+                qual_stats['forward'].empty:
+            qual_stats['forward'].to_json(fh)
+        else:
+            fh.write('undefined')
+        fh.write(', ')
+        if qual_stats['reverse'] is not None and not \
+                qual_stats['reverse'].empty:
+            qual_stats['reverse'].to_json(fh)
+        else:
+            fh.write('undefined')
+        fh.write(');')
+
+################## june 10
+"""
+
+
+
+
+
 
 
 
