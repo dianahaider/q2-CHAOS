@@ -50,11 +50,13 @@ def denoise_stats(output_dir: str,
     else:
         stats = load_df_labels(stats, labels)
 
+
     stats = pd.concat(stats)
     numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
     stats[numeric] = stats[numeric].apply(pd.to_numeric)
 #makes into a df
     stats = stats.groupby('id').sum()
+    stats = stats.drop(columns=['percentage of input passed filter', 'percentage of input merged', 'percentage of input non-chimeric'])
     df = pd.melt(stats.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_number = df['read_number'].max()
     df['% of Reads Remaining'] = df['read_number']/input_read_number * 100
@@ -75,6 +77,8 @@ def denoise_stats(output_dir: str,
     plt.xlim(0,4)
     plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-chimeric'])
     plt.xlabel('Processing Steps')
+    plt.legend(loc='center left', bbox_to_anchor=(1.25, 0.5), ncol=1)
+
 #    plt.title('allow to give any title or default one')
 
     line_graph.figure.savefig(os.path.join(output_dir, 'line_graph.png'), bbox_inches = 'tight')

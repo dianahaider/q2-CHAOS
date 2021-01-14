@@ -13,7 +13,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
-import ptitprince as pt
+#import ptitprince as pt
 import scipy.stats
 import biom
 import skbio
@@ -119,10 +119,10 @@ def alpha_frequency(output_dir: str,
 
         print('Plotting pairplot ...')
 
-        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
-                    orient = 'h', alpha = 0.65, palette = palette )
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
+        #raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged,
+        #            orient = 'h', alpha = 0.65, palette = palette )
+        #raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+        #raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
         plt.gcf().clear()
 
         print('Plotting raincloud ...')
@@ -161,11 +161,11 @@ def alpha_frequency(output_dir: str,
 #        if verbose:
         print('Plotting pairplot ...')
 
-        raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
-                    orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
-        raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
+        #raincloud_frequency = pt.RainCloud( x = 'Table', y = 'Sequencing Depth', data = melted_merged_metadata,
+        #            orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
+        #raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.png'), bbox_inches = 'tight')
+        #raincloud_frequency.figure.savefig(os.path.join(output_dir, 'raincloud.pdf'), bbox_inches = 'tight')
+        #plt.gcf().clear()
 
 #        if verbose:
         print('Plotting raincloud ...')
@@ -262,11 +262,11 @@ def alpha_diversity(output_dir: str,
 
         print('Plotting raincloud ...')
 
-        raincloud_diversity = pt.RainCloud(x = 'Table', y = 'Alpha Diversity Index', data = melted_merged,
-        orient = 'h', alpha = 0.65, palette = palette)
-        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
-        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
+        #raincloud_diversity = pt.RainCloud(x = 'Table', y = 'Alpha Diversity Index', data = melted_merged,
+        #orient = 'h', alpha = 0.65, palette = palette)
+        #raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
+        #raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
+        #plt.gcf().clear()
 
         print('Plotting boxplot ...')
 
@@ -302,11 +302,11 @@ def alpha_diversity(output_dir: str,
 
         print('Plotting raincloud ...')
 
-        raincloud_diversity = pt.RainCloud( x = 'Table', y = 'Alpha Diversity Index', data = melted_merged_metadata,
-                    orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
-        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
-        raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
-        plt.gcf().clear()
+        #raincloud_diversity = pt.RainCloud( x = 'Table', y = 'Alpha Diversity Index', data = melted_merged_metadata,
+        #            orient = 'h', hue = metadata_column, alpha = 0.65, palette = palette )
+        #raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.png'), bbox_inches = 'tight')
+        #raincloud_diversity.figure.savefig(os.path.join(output_dir, 'raincloud_diversity.pdf'), bbox_inches = 'tight')
+        #plt.gcf().clear()
 
         print('Plotting boxplot ...')
 

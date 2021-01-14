@@ -17,7 +17,7 @@ import matplotlib
 import re
 import matplotlib.pyplot as plt
 import matplotlib.pylab
-import ptitprince as pt
+#import ptitprince as pt
 from scipy.spatial.distance import pdist, squareform
 from sklearn import preprocessing
 
@@ -114,6 +114,11 @@ def taxo_variability(output_dir: str,
         variances.append(var_temp)
 
     taxons['variance'] = variances
+
+    table_preview = taxons.to_csv()
+    with open('alltaxons.csv', 'w') as file:
+        file.write(table_preview)
+
     df_most_var = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
     df_most_var = df_most_var.sort_values(by=['variance'])
     df_most_var_plot = df_most_var.drop(columns = ['variance'])
@@ -127,7 +132,11 @@ def taxo_variability(output_dir: str,
     print (df_less_var_plot)
 
     table_preview = df_less_var_plot.to_csv()
-    with open('resulting_table.csv', 'w') as file:
+    with open('mostvar_table.csv', 'w') as file:
+        file.write(table_preview)
+
+    table_preview = df_less_var_plot.to_csv()
+    with open('lessvar_table.csv', 'w') as file:
         file.write(table_preview)
 
     table1_html = q2templates.df_to_html(df_most_var_plot)
