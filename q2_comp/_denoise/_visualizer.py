@@ -97,7 +97,7 @@ def denoise_stats(output_dir: str,
     plt.bar(r, df[df['step']=='filtered']['read_number'], color = colors[1], edgecolor = 'white', width = 1)
     plt.bar(r, df[df['step']=='denoised']['read_number'], color = colors[2], edgecolor = 'white', width = 1)
     #plt.bar(r, df[df['step']=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
-    plt.bar(r, df[df['step']=='non-chimeric']['read_number'], color = colors[4], edgecolor = 'white', width = 1)
+    plt.bar(r, df[df['step']=='non-chimeric']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
 
     plt.xticks(r, vars_to_plot, fontweight = 'bold')
     plt.xlabel('Method')
