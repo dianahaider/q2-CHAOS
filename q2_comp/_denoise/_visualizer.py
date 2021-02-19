@@ -52,15 +52,15 @@ def denoise_stats(output_dir: str,
 
 
     stats = pd.concat(stats)
-    numeric = ['denoised', 'filtered', 'input', 'merged', 'non-chimeric']
+    numeric = ['denoised', 'filtered', 'input', 'non-chimeric']
     stats[numeric] = stats[numeric].apply(pd.to_numeric)
 #makes into a df
     stats = stats.groupby('id').sum()
-    stats = stats.drop(columns=['percentage of input passed filter', 'percentage of input merged', 'percentage of input non-chimeric'])
+    stats = stats.drop(columns=['percentage of input passed filter', 'percentage of input non-chimeric'])
     df = pd.melt(stats.reset_index(), id_vars = 'id', var_name = 'step', value_name = 'read_number')
     input_read_number = df['read_number'].max()
     df['% of Reads Remaining'] = df['read_number']/input_read_number * 100
-    step_order = {'input':0, 'filtered':1, 'denoised':2, 'merged':3, 'non-chimeric':4}
+    step_order = {'input':0, 'filtered':1, 'denoised':2, 'non-chimeric':3}
     df['order'] = df['step'].apply(lambda x: step_order[x])
     df = df.reset_index()
 
@@ -75,7 +75,7 @@ def denoise_stats(output_dir: str,
 
     plt.ylim(0,100)
     plt.xlim(0,4)
-    plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', '', 'Merged', '', 'Non-chimeric'])
+    plt.xticks([x/2 for x in range (0,9)], ['Input', '', 'Filtered', '', 'Denoised', "", 'Non-chimeric'])
     plt.xlabel('Processing Steps')
     plt.legend(loc='center left', bbox_to_anchor=(1.25, 0.5), ncol=1)
 
@@ -91,12 +91,12 @@ def denoise_stats(output_dir: str,
 
     print(df.shape)
 
-    colors = ['darkorange', 'orange', 'sandybrown', 'navajowhite', 'blanchedalmond']
-    Step = ['Input', 'Filtered', 'Denoised', 'Merged', 'Non-chimeric']
+    colors = ['darkorange', 'orange', 'sandybrown', 'navajowhite']
+    Step = ['Input', 'Filtered', 'Denoised', 'Non-chimeric']
     plt.bar(r, df[df['step']=='input']['read_number'], color = colors[0], edgecolor = 'white', width = 1)
     plt.bar(r, df[df['step']=='filtered']['read_number'], color = colors[1], edgecolor = 'white', width = 1)
     plt.bar(r, df[df['step']=='denoised']['read_number'], color = colors[2], edgecolor = 'white', width = 1)
-    plt.bar(r, df[df['step']=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
+    #plt.bar(r, df[df['step']=='merged']['read_number'], color = colors[3], edgecolor = 'white', width = 1)
     plt.bar(r, df[df['step']=='non-chimeric']['read_number'], color = colors[4], edgecolor = 'white', width = 1)
 
     plt.xticks(r, vars_to_plot, fontweight = 'bold')
