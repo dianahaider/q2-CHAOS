@@ -156,47 +156,18 @@ def taxo_variability(output_dir: str,
     pca_plot = taxons.drop(columns = ['variance'])
     print ('pca dataframe')
     pca_plot = pca_plot.reset_index()
-    pca_plot = pca_plot.drop(columns=['index'])
-    print ('drop dataframe index')
 
-    y = pca_plot.loc[:,['id']].values
-    x = feature_tables.values
-    x = StandardScaler().fit_transform(x)
-    df = pd.DataFrame(data = x, columns = df_x.columns)
+    print ('index of pca_plot reset')
 
-    pca = PCA(n_components=2)
-    principalComponents = pca.fit_transform(x)
-    principalDf = pd.DataFrame(data = principalComponents
-             , columns = ['principal component 1', 'principal component 2'])
-    principalDf.head(5)
-    feature_tables['id'] =['DADA_2', 'DADA_3', 'DADA_4','DADA_1','Deblur_3','Deblur_4','Deblur_1','Deblur_2']
-    col_one_list = finalDf['id'].tolist()
-    len(col_one_list)
-    finalDf = pd.concat([principalDf, feature_tables[['id']]], axis = 1)
-    finalDf.head(5)
-
-    fig = plt.figure(figsize = (8,8))
-    ax = fig.add_subplot(1,1,1)
-    ax.set_xlabel('Principal Component 1', fontsize = 15)
-    ax.set_ylabel('Principal Component 2', fontsize = 15)
-    ax.set_title('PCA of taxonomy assignment', fontsize = 20)
-
-    targets =['DADA_1', 'DADA_2', 'DADA_3','DADA_4','Deblur_3', 'Deblur_2','Deblur_1','Deblur_4']
-    colors = ['#E5FCC2','#9DE0AD','#45ADA8','#547980','#F26B38', '#EC2049','#A7226E','#F7DB4F']
-    for target, color in zip(targets, colors):
-        indicesToKeep = finalDf['id'] == target
-        ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-                , finalDf.loc[indicesToKeep, 'principal component 2']
-                , c = color
-                , s = 50)
-    ax.legend(targets)
-    ax.grid()
+    table_preview = pca_plot.to_csv()
+    with open('pca_plot.csv', 'w') as file:
+        file.write(table_preview)
 
 
 #    merged_1_2['variance'] = variances
 
-    heatmap_most = sns.heatmap(df_most_var_plot, linewidths= .2, cmap="YlGnBu")
-    heatmap_less = sns.heatmap(df_less_var_plot, linewidths= .2, cmap="YlGnBu")
+    heatmap_most = sns.heatmap(df_most_var_plot, cmap="YlGnBu")
+    heatmap_less = sns.heatmap(df_less_var_plot, cmap="YlGnBu")
 
 
     heatmap_most.figure.savefig(os.path.join(output_dir, 'heatmap_most.png'), bbox_inches = 'tight')
@@ -206,10 +177,6 @@ def taxo_variability(output_dir: str,
     heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.png'), bbox_inches = 'tight')
     heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.pdf'), bbox_inches = 'tight')
     plt.gcf().clear()
-
-    ax.figure.savefig(os.path.join(output_dir, 'pca_all.pdf'), bbox_inches = 'tight')
-    ax.figure.savefig(os.path.join(output_dir, 'pca_all.pdf'), bbox_inches = 'tight')
-
 
     index = os.path.join(TEMPLATES, 'taxonomy_assets', 'index.html')
     q2templates.render(index, output_dir)
