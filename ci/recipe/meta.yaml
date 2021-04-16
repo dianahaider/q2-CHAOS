@@ -28,6 +28,7 @@ requirements:
     - q2-feature-table {{ release }}.*
     - q2-metadata {{ release }}.*
     - ptitprince
+    - plotly
 
 test:
   imports:

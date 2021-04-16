@@ -17,6 +17,7 @@ import matplotlib
 import re
 import matplotlib.pyplot as plt
 import matplotlib.pylab
+import plotly.express as px
 #import ptitprince as pt
 from scipy.spatial.distance import pdist, squareform
 from sklearn import preprocessing
@@ -129,21 +130,37 @@ def taxo_variability(output_dir: str,
     df_most_var = taxons.loc[taxons['variance'] >= taxons.variance.quantile(quantile)]
     df_most_var = df_most_var.sort_values(by=['variance'])
     df_most_var_plot = df_most_var.drop(columns = ['variance'])
-    df_most_var_plot = (np.log(df_most_var_plot)).replace(-np.inf, 0)
+#    df_most_var_plot = (np.log(df_most_var_plot)).replace(-np.inf, 0)
+    df_most_var_plot = df_most_var_plot.replace(-np.inf, 0)
     print (df_most_var_plot)
 
     df_less_var = taxons.loc[taxons['variance'] <= taxons.variance.quantile(quantile)]
     df_less_var = df_less_var.sort_values(by=['variance'], ascending=False)
     df_less_var_plot = df_less_var.drop(columns = ['variance'])
-    df_less_var_plot = (np.log(df_less_var_plot)).replace(-np.inf, 0)
+#    df_less_var_plot = (np.log(df_less_var_plot)).replace(-np.inf, 0)
+    df_less_var_plot = df_less_var_plot.replace(-np.inf, 0)
+    #df_less_var_plot = df_less_var_plot.set_index('Taxon', inplace=True)
     print (df_less_var_plot)
+    print ('df_less_var_plot')
+    print(list(df_less_var_plot.columns))
 
-    table_preview = df_less_var_plot.to_csv()
+    df_less_var_barplot = df_less_var_plot
+    df_less_var_barplot.reset_index(level=0, inplace=True)
+    df_less_var_barplot = pd.melt(df_less_var_barplot, id_vars=['Taxon'])
+    print (df_less_var_barplot)
+    print ('df_less_var_barplot')
+    df_less_var_plot.set_index("Taxon", inplace = True)
+
+
+
+
+
+    table_preview = df_most_var_plot.to_csv()
     with open('mostvar_table.csv', 'w') as file:
         file.write(table_preview)
 
-    table_preview = df_less_var_plot.to_csv()
-    with open('lessvar_table.csv', 'w') as file:
+    table_preview = df_less_var_plot.to_html()
+    with open('lessvar_table.html', 'w') as file:
         file.write(table_preview)
 
     table1_html = q2templates.df_to_html(df_most_var_plot)
@@ -166,17 +183,31 @@ def taxo_variability(output_dir: str,
 
 #    merged_1_2['variance'] = variances
 
-    heatmap_most = sns.heatmap(df_most_var_plot, cmap="YlGnBu")
-    heatmap_less = sns.heatmap(df_less_var_plot, cmap="YlGnBu")
+#    heatmap_most = sns.heatmap(df_most_var_plot, cmap="YlGnBu")
+    barplot_less = px.bar(df_less_var_barplot, y="value", x='Taxon', color='variable', title="Least variable taxon barplot")
+    heatmap_most = px.imshow(df_most_var_plot)
+    heatmap_less = px.imshow(df_less_var_plot)
 
 
-    heatmap_most.figure.savefig(os.path.join(output_dir, 'heatmap_most.png'), bbox_inches = 'tight')
-    heatmap_most.figure.savefig(os.path.join(output_dir, 'heatmap_most.pdf'), bbox_inches = 'tight')
+
+
+
+    heatmap_most.write_image(os.path.join(output_dir, 'heatmap_most.png'))
+    heatmap_most.write_image(os.path.join(output_dir, 'heatmap_most.jpeg'))
+    heatmap_most.write_html(os.path.join(output_dir, 'heatmap_most.html'))
     plt.gcf().clear()
 
-    heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.png'), bbox_inches = 'tight')
-    heatmap_less.figure.savefig(os.path.join(output_dir, 'heatmap_less.pdf'), bbox_inches = 'tight')
+    barplot_less.write_image(os.path.join(output_dir, 'barplot_less.png'))
+    barplot_less.write_image(os.path.join(output_dir, 'barplot_less.jpeg'))
+    barplot_less.write_html(os.path.join(output_dir, 'barplot_less.html'))
     plt.gcf().clear()
+
+
+    heatmap_less.write_image(os.path.join(output_dir, 'heatmap_less.png'))
+    heatmap_less.write_image(os.path.join(output_dir, 'heatmap_less.jpeg'))
+    heatmap_less.write_html(os.path.join(output_dir, 'heatmap_less.html'))
+    plt.gcf().clear()
+
 
     index = os.path.join(TEMPLATES, 'taxonomy_assets', 'index.html')
     q2templates.render(index, output_dir)
